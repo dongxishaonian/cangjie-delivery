@@ -1,0 +1,16 @@
+{
+  "modules": [
+    {
+      "name": "cangjie-delivery",
+      "languageLevel": 11
+    },
+    {
+      "name": "cangjie-delivery.test",
+      "languageLevel": 11
+    },
+    {
+      "name": "cangjie-delivery.main",
+      "languageLevel": 11
+    }
+  ]
+}

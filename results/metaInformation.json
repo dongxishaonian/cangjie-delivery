@@ -1,0 +1,16 @@
+{
+  "total": 5,
+  "tools inspection": {
+    "Code Inspection": 5
+  },
+  "attributes": {
+    "vcs": {
+      "sarifIdea": {
+        "repositoryUri": "https://github.com/dongxishaonian/cangjie-delivery",
+        "revisionId": "ef6c007fca8bfb671f31d9e3e7516bd532b220ff",
+        "branch": "master"
+      }
+    },
+    "deviceId": "200820300000000-9211-a651-8911-4dce54d7c295"
+  }
+}
