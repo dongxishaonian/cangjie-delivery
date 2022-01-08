@@ -1,12 +1,12 @@
-package cn.techflower.foundation.service;
+package cn.techflower.authorization.service;
 
-import cn.techflower.foundation.presistence.PermissionRepository;
-import cn.techflower.foundation.presistence.PermissionRoleRepository;
-import cn.techflower.foundation.presistence.RoleRepository;
-import cn.techflower.foundation.presistence.entity.PermissionDO;
+import cn.techflower.authorization.presistence.PermissionRepository;
+import cn.techflower.authorization.presistence.PermissionRoleRepository;
+import cn.techflower.authorization.presistence.RoleRepository;
+import cn.techflower.authorization.presistence.entity.PermissionDO;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,15 +26,12 @@ import static org.springframework.security.config.Elements.ANONYMOUS;
 
 @Service
 @Slf4j
+@Data
 public class PermissionService implements UserDetailsService {
-    @Autowired
-    private PermissionRepository permissionRepository;
-    @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
-    private PermissionRoleRepository permissionRoleRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final PermissionRepository permissionRepository;
+    private final RoleRepository roleRepository;
+    private final PermissionRoleRepository permissionRoleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @PostConstruct
     public void startUp() throws JsonProcessingException {

@@ -1,6 +1,6 @@
-package cn.techflower.foundation.presistence;
+package cn.techflower.authorization.presistence;
 
-import cn.techflower.foundation.presistence.entity.PermissionRoleDO;
+import cn.techflower.authorization.presistence.entity.PermissionRoleDO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;

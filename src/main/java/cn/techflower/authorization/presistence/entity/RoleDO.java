@@ -1,4 +1,4 @@
-package cn.techflower.foundation.presistence.entity;
+package cn.techflower.authorization.presistence.entity;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

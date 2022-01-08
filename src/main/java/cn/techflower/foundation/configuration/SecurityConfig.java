@@ -19,12 +19,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin()
-            .defaultSuccessUrl("/public")
+            .defaultSuccessUrl("/index.html")
             .and()
             .logout()
-            .logoutSuccessUrl("/index.html")
+            .logoutSuccessUrl("/login")
+            .deleteCookies("JSESSIONID")
+            .invalidateHttpSession(true)
             .and().authorizeRequests()
-//            .antMatchers("/public").permitAll()
             // 所有请求都需要认证
             .anyRequest().authenticated()
             .and().httpBasic();
