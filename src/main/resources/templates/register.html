@@ -20,6 +20,50 @@
     type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.1/mdb.min.js"
 ></script>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#register-button").click(function (e) {
+            var errorMsg = ""
+            var username = $("#typeUsernameX-2").val().toString().trim();
+            if (username.length < 1 || username.includes(' ')) {
+                errorMsg += "❌ 用户名不能为空！\n ";
+            }
+            var password = $("#typePasswordX-2").val().toString();
+            if (password.length < 1) {
+                errorMsg += "❌ 密码不能为空！\n ";
+            }
+
+            var passwordAgain = $("#typePasswordX-3").val().toString();
+            if (passwordAgain.length < 1) {
+                errorMsg += "❌ 再次密码不能为空！\n";
+            }
+
+            if (password !== passwordAgain) {
+                errorMsg += "❌ 两次输入的密码不一致！\n";
+            }
+
+            if (errorMsg.length > 0) {
+                e.preventDefault();
+                alert(errorMsg);
+            }
+        })
+
+        $("#typePasswordX-3").change(function (e) {
+            var pass1 = $("#typePasswordX-2").val().toString();
+            var pass2 = $(this).val().toString();
+            let $error = $("#error-again");
+
+            var html = $error.html();
+            if (pass1 !== pass2 && html.length === 0) {
+                $error.html("<b style=\"color: crimson\">⚠️ 两次输入的密码不一致!</b>");
+            }
+            if (pass1 === pass2) {
+                $error.empty();
+            }
+        });
+    });
+</script>
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
@@ -36,9 +80,9 @@
                         <form action="/perform_register" method="POST">
 
                             <div class="form-outline mb-4">
-                                <input type="text" id="typeEmailX-2" class="form-control form-control-lg"
+                                <input type="text" id="typeUsernameX-2" class="form-control form-control-lg"
                                        name="username" value=""/>
-                                <label class="form-label" for="typeEmailX-2">Username</label>
+                                <label class="form-label" for="typeUsernameX-2">Username</label>
                             </div>
 
                             <div class="form-outline mb-4">
@@ -50,10 +94,12 @@
                             <div class="form-outline mb-4">
                                 <input type="password" id="typePasswordX-3" class="form-control form-control-lg"
                                        name="passwordAgain"/>
-                                <label class="form-label" for="typePasswordX-2">Password again</label>
+                                <label class="form-label" for="typePasswordX-3">Password again</label>
                             </div>
+                            <div id="error-again"></div>
 
-                            <button class="btn btn-primary btn-lg btn-block" style="background-color: #228B22;"
+                            <button id="register-button" class="btn btn-primary btn-lg btn-block"
+                                    style="background-color: #228B22;"
                                     type="submit">Register
                             </button>
                         </form>
