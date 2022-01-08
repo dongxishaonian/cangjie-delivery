@@ -2,6 +2,9 @@ package cn.techflower.authorization.presistence.entity;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,6 +18,7 @@ import java.util.List;
 @Accessors(chain = true)
 @Entity
 @Table(name = "permission")
+@EntityListeners(AuditingEntityListener.class)
 public class PermissionDO implements UserDetails, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -27,12 +31,14 @@ public class PermissionDO implements UserDetails, Serializable {
     private String password;
 
     @Column
-    private Boolean effective;
+    private Boolean effective = true;
 
     @Column
+    @CreatedDate
     private LocalDateTime created;
 
     @Column
+    @LastModifiedDate
     private LocalDateTime updated;
 
     @OneToMany(fetch = FetchType.EAGER)

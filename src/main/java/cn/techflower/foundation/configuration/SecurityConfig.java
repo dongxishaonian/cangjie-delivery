@@ -29,18 +29,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin()
-            .defaultSuccessUrl("/index.html")
+        http
+            .csrf().disable()
+
+            .formLogin()
+            .loginPage("/login")
+            .loginProcessingUrl("/perform_login")
+            .defaultSuccessUrl("/index", true)
+            .failureUrl("/login?error=true")
+            .permitAll()
+
             .and()
             .logout()
             .logoutSuccessUrl("/login")
             .deleteCookies("JSESSIONID")
             .invalidateHttpSession(true)
+
             .and()
             .rememberMe()
             .tokenValiditySeconds(120)
+
             .and()
             .authorizeRequests()
+            .antMatchers("/register", "/login", "/perform_register").permitAll()
             // 所有请求都需要认证
             .anyRequest().authenticated()
             .and().httpBasic();

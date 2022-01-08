@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Font Awesome -->
+<link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    rel="stylesheet"
+/>
+<!-- Google Fonts -->
+<link
+    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    rel="stylesheet"
+/>
+<!-- MDB -->
+<link
+    href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.1/mdb.min.css"
+    rel="stylesheet"
+/>
+<!-- MDB -->
+<script
+    type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.1/mdb.min.js"
+></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<section class="vh-100" style="background-color: #508bfc;">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                    <div class="card-body p-5 text-center">
+
+                        <h3 class="mb-5">Sign in</h3>
+                        <form action="/perform_login" method="POST">
+
+                            <div class="form-outline mb-4">
+                                <input type="text" id="typeEmailX-2" class="form-control form-control-lg"
+                                       name="username" value=""/>
+                                <label class="form-label" for="typeEmailX-2">Username</label>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <input type="password" id="typePasswordX-2" class="form-control form-control-lg"
+                                       name="password"/>
+                                <label class="form-label" for="typePasswordX-2">Password</label>
+                            </div>
+
+                            <!-- Checkbox -->
+                            <div class="form-check d-flex justify-content-start mb-4">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    name="remember-me"
+                                    id="form1Example3"
+                                />
+                                <label class="form-check-label" for="form1Example3"> Remember Me </label>
+                            </div>
+                            <div th:if="${error == true}"><b style="color: crimson">用户名或密码错误！</b></div>
+                            <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+                        </form>
+                        <hr class="my-4">
+                        <button class="btn btn-lg btn-block btn-primary" style="background-color: #228B22;"
+                                onclick="window.location.href='/register'"
+                                type="submit">Register
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
