@@ -1,0 +1,23 @@
+spring:
+  data:
+    jpa:
+      repositories:
+        enabled: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      password: mysecretpassword
+      username: postgres
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://localhost:5432/postgres
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.ProgressDialect
+        globally_quoted_identifiers: true
+    show-sql: true
+
+server:
+  port: 8088

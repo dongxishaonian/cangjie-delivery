@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Table(name = "role")
 public class RoleDO implements GrantedAuthority {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String name;

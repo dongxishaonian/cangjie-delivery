@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "permission")
 public class PermissionDO implements UserDetails, Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column
