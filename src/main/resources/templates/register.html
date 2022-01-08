@@ -79,8 +79,10 @@
                                        name="passwordAgain"/>
                                 <label class="form-label" for="typePasswordX-3">Password again</label>
                             </div>
-                            <div id="error-again"></div>
 
+                            <div th:each="error : ${errors}">
+                                <b style="color: crimson" th:text="${error}"></b>
+                            </div>
                             <button id="register-button" class="btn btn-primary btn-lg btn-block"
                                     style="background-color: #228B22;"
                                     type="submit">Register
