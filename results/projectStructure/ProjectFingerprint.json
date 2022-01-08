@@ -2,9 +2,9 @@
   "languages": [
     "Java",
     "HTML",
-    "Properties",
     "Plain text",
     "XML",
+    "Properties",
     ".gitignore (GitIgnore)",
     "Groovy"
   ]
