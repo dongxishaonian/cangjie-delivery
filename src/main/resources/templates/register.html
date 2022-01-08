@@ -48,20 +48,6 @@
                 alert(errorMsg);
             }
         })
-
-        $("#typePasswordX-3").change(function (e) {
-            var pass1 = $("#typePasswordX-2").val().toString();
-            var pass2 = $(this).val().toString();
-            let $error = $("#error-again");
-
-            var html = $error.html();
-            if (pass1 !== pass2 && html.length === 0) {
-                $error.html("<b style=\"color: crimson\">⚠️ 两次输入的密码不一致!</b>");
-            }
-            if (pass1 === pass2) {
-                $error.empty();
-            }
-        });
     });
 </script>
 <head>
