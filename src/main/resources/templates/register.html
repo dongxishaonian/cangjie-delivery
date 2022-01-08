@@ -35,9 +35,6 @@
             }
 
             var passwordAgain = $("#typePasswordX-3").val().toString();
-            if (passwordAgain.length < 1) {
-                errorMsg += "❌ 再次密码不能为空！\n";
-            }
 
             if (password !== passwordAgain) {
                 errorMsg += "❌ 两次输入的密码不一致！\n";
