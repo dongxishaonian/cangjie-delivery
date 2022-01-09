@@ -81,6 +81,7 @@
                             </div>
 
                             <div th:each="error : ${errors}">
+                                <!--/*@thymesVar id="error" type="java.lang.String"*/-->
                                 <b style="color: crimson" th:text="${error}"></b>
                             </div>
                             <button id="register-button" class="btn btn-primary btn-lg btn-block"
