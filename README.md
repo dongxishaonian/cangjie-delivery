@@ -1,9 +1,25 @@
-
 [![Code Scanning](https://github.com/dongxishaonian/cangjie-delivery/actions/workflows/code_scanning.yml/badge.svg)](https://github.com/dongxishaonian/cangjie-delivery/actions/workflows/code_scanning.yml)
-![GitHub branch checks state](https://img.shields.io/github/checks-status/dongxishaonian/cangjie-delivery/main)
-# cangjie-delivery
-研发交付流程
+[![pages-build-deployment](https://github.com/dongxishaonian/cangjie-delivery/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/dongxishaonian/cangjie-delivery/actions/workflows/pages/pages-build-deployment)
 
+# cangjie-delivery
+
+**仓颉交付工具** ，专注于开发者，全过程提升并规范化你的软件开发/交付流程！
+
+## 项目介绍
+
+### Why Me？
+
+#### 一些想法
+
+### 产品形态
+
+## 技术栈
+
+### 开发语言
+
+### 技术点
+
+### 架构
 
 ## code quality
 本项目代码质量使用 [jetbrains-Qodana](https://www.jetbrains.com/help/qodana/welcome.html) 进行检查保证，检查方式基于**Github Action+Qodana**的方式实现。
