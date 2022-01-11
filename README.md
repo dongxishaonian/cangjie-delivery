@@ -1,4 +1,4 @@
-[![Code Scanning](https://github.com/dongxishaonian/cangjie-delivery/actions/workflows/code_scanning.yml/badge.svg)](https://github.com/dongxishaonian/cangjie-delivery/actions/workflows/code_scanning.yml)
+﻿[![Code Scanning](https://github.com/dongxishaonian/cangjie-delivery/actions/workflows/code_scanning.yml/badge.svg)](https://github.com/dongxishaonian/cangjie-delivery/actions/workflows/code_scanning.yml)
 [![pages-build-deployment](https://github.com/dongxishaonian/cangjie-delivery/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/dongxishaonian/cangjie-delivery/actions/workflows/pages/pages-build-deployment)
 
 # cangjie-delivery
@@ -19,7 +19,7 @@
 ![三个阶段](https://dxsn-1300740068.cos.ap-nanjing.myqcloud.com/clipboard_20220110_111429.png)
 
 在实际的开发过程中，根据每个团队的不同，对以上每个阶段的细化也会存在不少差异。这些差异可能和分支模型、采用的开发方法、面向的用户群体...有关。下面通过一个示例来展示一个较完整的开发流程模型图：
-
+![流程示例](https://dxsn-1300740068.cos.ap-nanjing.myqcloud.com/clipboard_20220111_105249.png)
 
 ### 产品形态
 
