@@ -57,5 +57,5 @@
 * 如果你是项目的维护者，你将拥有看板的编辑权限，你将有权对看板中的各类事项进行编辑（[如何成为项目维护者？](https://www.techflower.cn)）。
 
 ## 相关链接
-* trello: [https://trello.com/invite/b/yHlvEavj/f86e4dabba68f43a92e6978f3b99f568/cangjie-delivery](https://www.techflower.cn/cangjie-delivery/)
+* trello: [https://trello.com/invite/b/yHlvEavj/f86e4dabba68f43a92e6978f3b99f568/cangjie-delivery](https://trello.com/invite/b/yHlvEavj/f86e4dabba68f43a92e6978f3b99f568/cangjie-delivery)
 * Qadano: [https://www.techflower.cn/cangjie-delivery/](https://www.techflower.cn/cangjie-delivery/)
