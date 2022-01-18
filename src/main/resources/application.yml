@@ -19,7 +19,7 @@ spring:
     show-sql: true
     open-in-view: true
   liquibase:
-    change-log: classpath:/db/changelog/18-01-changelog.xml
+    change-log: classpath:/db/changelog/db.changelog-master.xml
 
 server:
   port: 8088
