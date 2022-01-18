@@ -18,6 +18,8 @@ spring:
         globally_quoted_identifiers: true
     show-sql: true
     open-in-view: true
+  liquibase:
+    change-log: classpath:/db/changelog/18-01-changelog.xml
 
 server:
   port: 8088
