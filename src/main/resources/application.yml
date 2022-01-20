@@ -23,3 +23,9 @@ spring:
 
 server:
   port: 8088
+
+
+
+external-system:
+  trello:
+
