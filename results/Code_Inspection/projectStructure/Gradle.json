@@ -74,6 +74,14 @@
       "version": "2.13.1"
     },
     {
+      "ideaName": "Gradle: org.apache.httpcomponents:httpclient:4.5.13",
+      "gradleName": "org.apache.httpcomponents:httpclient:4.5.13",
+      "unresolved": false,
+      "groupId": "org.apache.httpcomponents",
+      "artifactId": "httpclient",
+      "version": "4.5.13"
+    },
+    {
       "ideaName": "Gradle: org.apache.commons:commons-lang3:3.12.0",
       "gradleName": "org.apache.commons:commons-lang3:3.12.0",
       "unresolved": false,
@@ -328,6 +336,22 @@
       "groupId": "com.fasterxml.jackson.core",
       "artifactId": "jackson-core",
       "version": "2.12.6"
+    },
+    {
+      "ideaName": "Gradle: org.apache.httpcomponents:httpcore:4.4.15",
+      "gradleName": "org.apache.httpcomponents:httpcore:4.4.15",
+      "unresolved": false,
+      "groupId": "org.apache.httpcomponents",
+      "artifactId": "httpcore",
+      "version": "4.4.15"
+    },
+    {
+      "ideaName": "Gradle: commons-codec:commons-codec:1.15",
+      "gradleName": "commons-codec:commons-codec:1.15",
+      "unresolved": false,
+      "groupId": "commons-codec",
+      "artifactId": "commons-codec",
+      "version": "1.15"
     },
     {
       "ideaName": "Gradle: javax.xml.bind:jaxb-api:2.3.1",
