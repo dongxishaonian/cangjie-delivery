@@ -20,12 +20,8 @@ spring:
     open-in-view: true
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.xml
+  profiles:
+    default: dev
 
 server:
   port: 8088
-
-
-
-external-system:
-  trello:
-

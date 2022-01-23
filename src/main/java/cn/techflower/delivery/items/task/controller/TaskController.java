@@ -20,6 +20,6 @@ public class TaskController {
 
     @GetMapping(value = "/taskList")
     public ResponseEntity<List<TaskDto>> getTaskList(@RequestParam TaskSourceType taskSourceType) {
-
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,0 +1,6 @@
+external-system:
+  trello:
+    api-key: 42d5f57db602b726d8806aa57a3a4960
+    api-token: 381aa391118fc3578fb8f6792643835203963f3f4644f2f35cbce958c65c102f
+  github:
+    api-token: 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
