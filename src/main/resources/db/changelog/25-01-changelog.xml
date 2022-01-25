@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd"
+    objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1643094385435-1" author="chengang (generated)">
+        <createTable tableName="delivery_process">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_delivery_process"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="DATETIME"/>
+            <column name="created" type="DATETIME"/>
+            <column name="updated" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1643094385435-2" author="chengang (generated)">
+        <createTable tableName="task">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_task"/>
+            </column>
+            <column name="source_type" type="VARCHAR(255)"/>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="task_key" type="VARCHAR(255)"/>
+            <column name="task_url" type="VARCHAR(255)"/>
+            <column name="delivery_process_id" type="BIGINT"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="DATETIME"/>
+            <column name="created" type="DATETIME"/>
+            <column name="updated" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1643094385435-3" author="chengang (generated)">
+        <addForeignKeyConstraint baseColumnNames="delivery_process_id" baseTableName="task"
+                                 constraintName="FK_TASK_ON_DELIVERY_PROCESS" referencedColumnNames="id"
+                                 referencedTableName="delivery_process"/>
+    </changeSet>
+    <changeSet id="1643094385435-4" author="chengang (generated)">
+        <dropForeignKeyConstraint baseTableName="permission_role" constraintName="fkmp37d1hsq2k64q54y7w2gk8o4"/>
+    </changeSet>
+    <changeSet id="1643094385435-5" author="chengang (generated)">
+        <dropForeignKeyConstraint baseTableName="permission_role" constraintName="fkneuw51xy9npa11lv68oqx0dcn"/>
+    </changeSet>
+
+</databaseChangeLog>

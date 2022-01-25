@@ -53,4 +53,6 @@
                         minValue="1" sequenceName="hibernate_sequence" startValue="1"/>
     </changeSet>
 
+    <include file="db/changelog/25-01-changelog.xml"/>
+
 </databaseChangeLog>
