@@ -19,11 +19,5 @@
             <column name="updated" type="DATETIME"/>
         </createTable>
     </changeSet>
-    <changeSet id="1643180929179-2" author="chengang (generated)">
-        <dropForeignKeyConstraint baseTableName="permission_role" constraintName="FKmp37d1hsq2k64q54y7w2gk8o4"/>
-    </changeSet>
-    <changeSet id="1643180929179-3" author="chengang (generated)">
-        <dropForeignKeyConstraint baseTableName="permission_role" constraintName="FKneuw51xy9npa11lv68oqx0dcn"/>
-    </changeSet>
 
 </databaseChangeLog>

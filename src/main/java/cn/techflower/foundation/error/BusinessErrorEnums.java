@@ -8,6 +8,8 @@ import lombok.Getter;
 public enum BusinessErrorEnums {
     USER_NOT_FOUND("用户信息不存在！"),
 
+    DELIVERY_PROCESS_NOT_FOUND("开发流程不存在！"),
+
     TRELLO_AUTH_CONFIG_NOT_FOUND("trello端认证配置未找到！"),
     TRELLO_RESPONSE_DATA_ERROR("trello端响应数据异常！");
 

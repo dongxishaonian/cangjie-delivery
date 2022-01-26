@@ -14,4 +14,5 @@ public class TaskDto implements Serializable {
     private String title;
     private String taskKey;
     private String taskUrl;
+    private Long deliveryProcessId;
 }
