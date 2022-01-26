@@ -50,6 +50,22 @@
       "version": "2.5.8"
     },
     {
+      "ideaName": "Gradle: com.vladmihalcea:hibernate-types-52:2.9.13",
+      "gradleName": "com.vladmihalcea:hibernate-types-52:2.9.13",
+      "unresolved": false,
+      "groupId": "com.vladmihalcea",
+      "artifactId": "hibernate-types-52",
+      "version": "2.9.13"
+    },
+    {
+      "ideaName": "Gradle: com.google.guava:guava:18.0",
+      "gradleName": "com.google.guava:guava:18.0",
+      "unresolved": false,
+      "groupId": "com.google.guava",
+      "artifactId": "guava",
+      "version": "18.0"
+    },
+    {
       "ideaName": "Gradle: org.mapstruct:mapstruct:1.4.2.Final",
       "gradleName": "org.mapstruct:mapstruct:1.4.2.Final",
       "unresolved": false,
@@ -296,6 +312,14 @@
       "groupId": "org.hibernate.validator",
       "artifactId": "hibernate-validator",
       "version": "6.2.0.Final"
+    },
+    {
+      "ideaName": "Gradle: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.12.6",
+      "gradleName": "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.12.6",
+      "unresolved": false,
+      "groupId": "com.fasterxml.jackson.module",
+      "artifactId": "jackson-module-jaxb-annotations",
+      "version": "2.12.6"
     },
     {
       "ideaName": "Gradle: org.testcontainers:testcontainers:1.16.2",
@@ -738,6 +762,14 @@
       "version": "2.0.2"
     },
     {
+      "ideaName": "Gradle: jakarta.activation:jakarta.activation-api:1.2.2",
+      "gradleName": "jakarta.activation:jakarta.activation-api:1.2.2",
+      "unresolved": false,
+      "groupId": "jakarta.activation",
+      "artifactId": "jakarta.activation-api",
+      "version": "1.2.2"
+    },
+    {
       "ideaName": "Gradle: com.github.docker-java:docker-java-api:3.2.12",
       "gradleName": "com.github.docker-java:docker-java-api:3.2.12",
       "unresolved": false,
@@ -824,14 +856,6 @@
       "groupId": "net.minidev",
       "artifactId": "json-smart",
       "version": "2.4.7"
-    },
-    {
-      "ideaName": "Gradle: jakarta.activation:jakarta.activation-api:1.2.2",
-      "gradleName": "jakarta.activation:jakarta.activation-api:1.2.2",
-      "unresolved": false,
-      "groupId": "jakarta.activation",
-      "artifactId": "jakarta.activation-api",
-      "version": "1.2.2"
     },
     {
       "ideaName": "Gradle: org.junit.jupiter:junit-jupiter-params:5.7.2",

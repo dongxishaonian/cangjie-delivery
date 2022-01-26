@@ -76,6 +76,14 @@
           "type": "Library"
         },
         {
+          "name": "Gradle: com.vladmihalcea:hibernate-types-52:2.9.13",
+          "type": "Library"
+        },
+        {
+          "name": "Gradle: com.google.guava:guava:18.0",
+          "type": "Library"
+        },
+        {
           "name": "Gradle: org.mapstruct:mapstruct:1.4.2.Final",
           "type": "Library"
         },
@@ -197,6 +205,10 @@
         },
         {
           "name": "Gradle: org.hibernate.validator:hibernate-validator:6.2.0.Final",
+          "type": "Library"
+        },
+        {
+          "name": "Gradle: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.12.6",
           "type": "Library"
         },
         {
@@ -420,6 +432,10 @@
           "type": "Library"
         },
         {
+          "name": "Gradle: jakarta.activation:jakarta.activation-api:1.2.2",
+          "type": "Library"
+        },
+        {
           "name": "Gradle: com.github.docker-java:docker-java-api:3.2.12",
           "type": "Library"
         },
@@ -461,10 +477,6 @@
         },
         {
           "name": "Gradle: net.minidev:json-smart:2.4.7",
-          "type": "Library"
-        },
-        {
-          "name": "Gradle: jakarta.activation:jakarta.activation-api:1.2.2",
           "type": "Library"
         },
         {
@@ -658,6 +670,14 @@
           "type": "Library"
         },
         {
+          "name": "Gradle: com.vladmihalcea:hibernate-types-52:2.9.13",
+          "type": "Library"
+        },
+        {
+          "name": "Gradle: com.google.guava:guava:18.0",
+          "type": "Library"
+        },
+        {
           "name": "Gradle: org.mapstruct:mapstruct:1.4.2.Final",
           "type": "Library"
         },
@@ -763,6 +783,10 @@
         },
         {
           "name": "Gradle: org.hibernate.validator:hibernate-validator:6.2.0.Final",
+          "type": "Library"
+        },
+        {
+          "name": "Gradle: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.12.6",
           "type": "Library"
         },
         {
@@ -926,6 +950,14 @@
           "type": "Library"
         },
         {
+          "name": "Gradle: jakarta.xml.bind:jakarta.xml.bind-api:2.3.3",
+          "type": "Library"
+        },
+        {
+          "name": "Gradle: jakarta.activation:jakarta.activation-api:1.2.2",
+          "type": "Library"
+        },
+        {
           "name": "Gradle: javax.activation:javax.activation-api:1.2.0",
           "type": "Library"
         },
@@ -943,10 +975,6 @@
         },
         {
           "name": "Gradle: org.springframework:spring-jcl:5.3.14",
-          "type": "Library"
-        },
-        {
-          "name": "Gradle: jakarta.xml.bind:jakarta.xml.bind-api:2.3.3",
           "type": "Library"
         },
         {

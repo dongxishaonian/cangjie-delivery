@@ -55,6 +55,18 @@
       ]
     },
     {
+      "name": "Gradle: com.vladmihalcea:hibernate-types-52:2.9.13",
+      "roots": [
+        "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/com.vladmihalcea/hibernate-types-52/2.9.13/f31b9d3a1fea56bcd2d23c16dc6d0eb87fe6375c/hibernate-types-52-2.9.13.jar!/"
+      ]
+    },
+    {
+      "name": "Gradle: com.google.guava:guava:18.0",
+      "roots": [
+        "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/com.google.guava/guava/18.0/cce0823396aa693798f8882e64213b1772032b09/guava-18.0.jar!/"
+      ]
+    },
+    {
       "name": "Gradle: org.mapstruct:mapstruct:1.4.2.Final",
       "roots": [
         "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/org.mapstruct/mapstruct/1.4.2.Final/68d82e631f75d073b3a432cb6cc1920fec57357b/mapstruct-1.4.2.Final.jar!/"
@@ -214,6 +226,12 @@
       "name": "Gradle: org.hibernate.validator:hibernate-validator:6.2.0.Final",
       "roots": [
         "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/org.hibernate.validator/hibernate-validator/6.2.0.Final/d6b0760dfffbf379cedd02f715ff4c9a2e215921/hibernate-validator-6.2.0.Final.jar!/"
+      ]
+    },
+    {
+      "name": "Gradle: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.12.6",
+      "roots": [
+        "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-jaxb-annotations/2.12.6/a0bea2c6f98eb0dc24208b54a53da80ea459c156/jackson-module-jaxb-annotations-2.12.6.jar!/"
       ]
     },
     {
@@ -457,6 +475,18 @@
       ]
     },
     {
+      "name": "Gradle: jakarta.xml.bind:jakarta.xml.bind-api:2.3.3",
+      "roots": [
+        "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/jakarta.xml.bind/jakarta.xml.bind-api/2.3.3/48e3b9cfc10752fba3521d6511f4165bea951801/jakarta.xml.bind-api-2.3.3.jar!/"
+      ]
+    },
+    {
+      "name": "Gradle: jakarta.activation:jakarta.activation-api:1.2.2",
+      "roots": [
+        "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/jakarta.activation/jakarta.activation-api/1.2.2/99f53adba383cb1bf7c3862844488574b559621f/jakarta.activation-api-1.2.2.jar!/"
+      ]
+    },
+    {
       "name": "Gradle: javax.activation:javax.activation-api:1.2.0",
       "roots": [
         "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/javax.activation/javax.activation-api/1.2.0/85262acf3ca9816f9537ca47d5adeabaead7cb16/javax.activation-api-1.2.0.jar!/"
@@ -484,12 +514,6 @@
       "name": "Gradle: org.springframework:spring-jcl:5.3.14",
       "roots": [
         "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.3.14/ffcf745ed5ba32930771378316fd08e97986bec2/spring-jcl-5.3.14.jar!/"
-      ]
-    },
-    {
-      "name": "Gradle: jakarta.xml.bind:jakarta.xml.bind-api:2.3.3",
-      "roots": [
-        "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/jakarta.xml.bind/jakarta.xml.bind-api/2.3.3/48e3b9cfc10752fba3521d6511f4165bea951801/jakarta.xml.bind-api-2.3.3.jar!/"
       ]
     },
     {
@@ -754,12 +778,6 @@
       "name": "Gradle: net.minidev:json-smart:2.4.7",
       "roots": [
         "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/net.minidev/json-smart/2.4.7/8d7f4c1530c07c54930935f3da85f48b83b3c109/json-smart-2.4.7.jar!/"
-      ]
-    },
-    {
-      "name": "Gradle: jakarta.activation:jakarta.activation-api:1.2.2",
-      "roots": [
-        "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/jakarta.activation/jakarta.activation-api/1.2.2/99f53adba383cb1bf7c3862844488574b559621f/jakarta.activation-api-1.2.2.jar!/"
       ]
     },
     {
