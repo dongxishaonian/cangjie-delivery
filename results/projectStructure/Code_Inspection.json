@@ -29,6 +29,11 @@
               "path": "file://$PROJECT_DIR$/src/test/java",
               "type": "TestSource",
               "packagePrefix": ""
+            },
+            {
+              "path": "file://$PROJECT_DIR$/src/test/resources",
+              "type": "TestResource",
+              "packagePrefix": ""
             }
           ]
         }
@@ -68,6 +73,10 @@
         },
         {
           "name": "Gradle: org.springframework.boot:spring-boot-starter-validation:2.5.8",
+          "type": "Library"
+        },
+        {
+          "name": "Gradle: org.mapstruct:mapstruct:1.4.2.Final",
           "type": "Library"
         },
         {
@@ -621,6 +630,10 @@
           "type": "Library"
         },
         {
+          "name": "Gradle: org.mapstruct:mapstruct-processor:1.4.2.Final",
+          "type": "Library"
+        },
+        {
           "name": "Gradle: org.springframework.boot:spring-boot-starter-web:2.5.8",
           "type": "Library"
         },
@@ -642,6 +655,10 @@
         },
         {
           "name": "Gradle: org.springframework.boot:spring-boot-starter-validation:2.5.8",
+          "type": "Library"
+        },
+        {
+          "name": "Gradle: org.mapstruct:mapstruct:1.4.2.Final",
           "type": "Library"
         },
         {

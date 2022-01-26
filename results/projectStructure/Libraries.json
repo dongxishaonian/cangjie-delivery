@@ -13,6 +13,12 @@
       ]
     },
     {
+      "name": "Gradle: org.mapstruct:mapstruct-processor:1.4.2.Final",
+      "roots": [
+        "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/org.mapstruct/mapstruct-processor/1.4.2.Final/e55bd90d51cddd638c07d5bd89fc7535d4e3d069/mapstruct-processor-1.4.2.Final.jar!/"
+      ]
+    },
+    {
       "name": "Gradle: org.springframework.boot:spring-boot-starter-web:2.5.8",
       "roots": [
         "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-web/2.5.8/a00b4a6f4954e7633388da62caf69589e327ae16/spring-boot-starter-web-2.5.8.jar!/"
@@ -46,6 +52,12 @@
       "name": "Gradle: org.springframework.boot:spring-boot-starter-validation:2.5.8",
       "roots": [
         "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-validation/2.5.8/b14b6912d5c899a02ac0d43686584af3f85ae53b/spring-boot-starter-validation-2.5.8.jar!/"
+      ]
+    },
+    {
+      "name": "Gradle: org.mapstruct:mapstruct:1.4.2.Final",
+      "roots": [
+        "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/org.mapstruct/mapstruct/1.4.2.Final/68d82e631f75d073b3a432cb6cc1920fec57357b/mapstruct-1.4.2.Final.jar!/"
       ]
     },
     {

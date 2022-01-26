@@ -50,6 +50,14 @@
       "version": "2.5.8"
     },
     {
+      "ideaName": "Gradle: org.mapstruct:mapstruct:1.4.2.Final",
+      "gradleName": "org.mapstruct:mapstruct:1.4.2.Final",
+      "unresolved": false,
+      "groupId": "org.mapstruct",
+      "artifactId": "mapstruct",
+      "version": "1.4.2.Final"
+    },
+    {
       "ideaName": "Gradle: org.testcontainers:junit-jupiter:1.16.2",
       "gradleName": "org.testcontainers:junit-jupiter:1.16.2",
       "unresolved": false,
@@ -1088,6 +1096,14 @@
       "groupId": "org.projectlombok",
       "artifactId": "lombok",
       "version": "1.18.22"
+    },
+    {
+      "ideaName": "Gradle: org.mapstruct:mapstruct-processor:1.4.2.Final",
+      "gradleName": "org.mapstruct:mapstruct-processor:1.4.2.Final",
+      "unresolved": false,
+      "groupId": "org.mapstruct",
+      "artifactId": "mapstruct-processor",
+      "version": "1.4.2.Final"
     },
     {
       "ideaName": "Gradle: org.springframework.boot:spring-boot-devtools:2.5.8",
