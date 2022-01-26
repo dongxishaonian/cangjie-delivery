@@ -1,1 +1,29 @@
-{"version":"3","listProblem":[]}
+{"version":"3","listProblem":[{
+  "tool": "Code Inspection",
+  "category": "Probable bugs",
+  "type": "Malformed format string",
+  "severity": "High",
+  "comment": "Too many arguments for format string (found: 1, expected: 0)",
+  "detailsInfo": "Reports format strings that don't comply with the standard Java syntax.\n\nBy default, the inspection considers a compile-time constant as a format string if it's used as an argument to the corresponding methods on\n`java.util.Formatter`, `java.lang.String`, `java.io.PrintWriter` or `java.io.PrintStream`.\n\n**Example:**\n\n\n      String.format(\"x = %d, y = %d\", 42);\n\nUse the inspection settings to mark additional classes and methods as related to string formatting.",
+  "sources": [
+    {
+      "type": "file",
+      "path": "src/main/java/cn/techflower/delivery/items/task/client/TrelloClient.java",
+      "language": "JAVA",
+      "line": 78,
+      "offset": 23,
+      "length": 6,
+      "code": {
+        "startLine": 76,
+        "length": 6,
+        "offset": 103,
+        "surroundingCode": "            throw new BusinessException(TRELLO_AUTH_CONFIG_NOT_FOUND);\n        }\n        return String.format(\"\",\"\");\n    }\n}"
+      }
+    }
+  ],
+  "attributes": {
+    "module": "cangjie-delivery.main",
+    "inspectionName": "MalformedFormatString"
+  },
+  "hash": "ceec848b9f6882cafe0ec6c93a247b73ffb85b820b725b337976c32f95273716"
+}]}
