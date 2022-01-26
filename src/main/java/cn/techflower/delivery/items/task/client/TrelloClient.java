@@ -2,8 +2,12 @@ package cn.techflower.delivery.items.task.client;
 
 import cn.techflower.delivery.items.task.domian.dto.BoardDto;
 import cn.techflower.delivery.items.task.domian.dto.CardDto;
+import cn.techflower.delivery.items.task.domian.entity.TrelloConfigEntity;
+import cn.techflower.delivery.items.task.service.TrelloConfigService;
+import cn.techflower.foundation.error.BusinessException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -13,11 +17,14 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+import static cn.techflower.foundation.error.BusinessErrorEnums.TRELLO_AUTH_CONFIG_NOT_FOUND;
+
 @Component
 @Slf4j
 @Data
 public class TrelloClient {
     private final ClientHttpRequestFactory clientHttpRequestFactory;
+    private final TrelloConfigService trelloConfigService;
     @Value("${external-system.trello.authStr}")
     private String authStr;
 
@@ -61,5 +68,13 @@ public class TrelloClient {
         headers.add("Authorization", authStr);
         headers.setContentType(MediaType.APPLICATION_JSON);
         return headers;
+    }
+
+    private String buildAuthHeader() {
+        TrelloConfigEntity currentTrelloConfig = trelloConfigService.getCurrentTrelloConfig();
+        if (StringUtils.isBlank(currentTrelloConfig.getTrelloKey()) || StringUtils.isBlank(currentTrelloConfig.getTrelloToken())) {
+            throw new BusinessException(TRELLO_AUTH_CONFIG_NOT_FOUND);
+        }
+        return String.format("","");
     }
 }
