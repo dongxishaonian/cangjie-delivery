@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum ProcessTypeEnums{
+public enum ProcessNodeEnums {
     TASK("开发任务"),
     FEATURE("特性分支"),
     CI("持续集成"),

@@ -64,7 +64,7 @@
             </tr>
             <tr th:each="ix : ${#numbers.sequence(0,(DeliveryProcessDetail.maxItemsSize)-1)}">
                 <td th:each="item:${DeliveryProcessDetail.items}">
-                    <div class="card" style="width: 300px;height: 200px;margin-right: 10px" th:if="${item.get(ix).getProcessTypeEnums().name().equals('TASK')}">
+                    <div class="card" style="width: 300px;height: 200px;margin-right: 10px" th:if="${item.get(ix).getProcessNodeEnums().name().equals('TASK')}">
                         <div class="card-header">
                             <b th:text="${item.get(ix).getProcessDetail().sourceType}">Trello</b>
                         </div>

@@ -2,8 +2,7 @@ package cn.techflower.delivery.controller.vo;
 
 import cn.techflower.delivery.domain.entity.DeliveryProcessEntity;
 import cn.techflower.delivery.domain.entity.DeliveryProcessTemplateEntity;
-import cn.techflower.delivery.enums.ProcessToolEnums;
-import cn.techflower.delivery.enums.ProcessTypeEnums;
+import cn.techflower.delivery.enums.ProcessNodeEnums;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -20,7 +19,7 @@ public class DeliveryProcessVo {
     @Data
     @Accessors(chain = true)
     public static class ItemVo {
-        private ProcessTypeEnums processTypeEnums;
+        private ProcessNodeEnums processNodeEnums;
         private Object processDetail;
     }
 }

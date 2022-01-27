@@ -9,13 +9,13 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public enum ProcessToolEnums {
-    TRELLO(Lists.newArrayList(ProcessTypeEnums.TASK)),
-    GITHUB(Lists.newArrayList(ProcessTypeEnums.FEATURE, ProcessTypeEnums.PULL_REQUEST, ProcessTypeEnums.CODE_REVIEW, ProcessTypeEnums.MERGE)),
-    GITHUB_ACTION(Lists.newArrayList(ProcessTypeEnums.CI)),
-    JENKINS(Lists.newArrayList(ProcessTypeEnums.CI)),
-    GERRIT(Lists.newArrayList(ProcessTypeEnums.CODE_REVIEW)),
-    GITLAB(Lists.newArrayList(ProcessTypeEnums.FEATURE, ProcessTypeEnums.PULL_REQUEST, ProcessTypeEnums.CODE_REVIEW, ProcessTypeEnums.MERGE));
+    TRELLO(Lists.newArrayList(ProcessNodeEnums.TASK)),
+    GITHUB(Lists.newArrayList(ProcessNodeEnums.FEATURE, ProcessNodeEnums.PULL_REQUEST, ProcessNodeEnums.CODE_REVIEW, ProcessNodeEnums.MERGE)),
+    GITHUB_ACTION(Lists.newArrayList(ProcessNodeEnums.CI)),
+    JENKINS(Lists.newArrayList(ProcessNodeEnums.CI)),
+    GERRIT(Lists.newArrayList(ProcessNodeEnums.CODE_REVIEW)),
+    GITLAB(Lists.newArrayList(ProcessNodeEnums.FEATURE, ProcessNodeEnums.PULL_REQUEST, ProcessNodeEnums.CODE_REVIEW, ProcessNodeEnums.MERGE));
 
 
-    private final List<ProcessTypeEnums> processType;
+    private final List<ProcessNodeEnums> processNode;
 }
