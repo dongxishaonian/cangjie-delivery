@@ -52,9 +52,4 @@ public class AuthorizationController {
         permissionService.createNewUser(registerDto);
         return "login";
     }
-
-    @GetMapping("/index")
-    public String come() {
-        return "index";
-    }
 }
