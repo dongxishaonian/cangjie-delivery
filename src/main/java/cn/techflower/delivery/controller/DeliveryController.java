@@ -2,6 +2,7 @@ package cn.techflower.delivery.controller;
 
 
 import cn.techflower.delivery.controller.vo.DeliveryProcessVo;
+import cn.techflower.delivery.domain.dto.ProcessDetailDto;
 import cn.techflower.delivery.domain.entity.DeliveryProcessEntity;
 import cn.techflower.delivery.domain.entity.DeliveryProcessTemplateEntity;
 import cn.techflower.delivery.enums.ProcessTypeEnums;
@@ -25,12 +26,17 @@ public class DeliveryController {
     public String startLogin(Model model) {
         DeliveryProcessVo deliveryProcessVo = new DeliveryProcessVo();
         deliveryProcessVo.setTemplate(new DeliveryProcessTemplateEntity()
-                .setProcessTypeList(Lists.newArrayList(ProcessTypeEnums.TASK, ProcessTypeEnums.FEATURE, ProcessTypeEnums.CI, ProcessTypeEnums.PULL_REQUEST, ProcessTypeEnums.CODE_REVIEW, ProcessTypeEnums.MERGE)));
+            .setProcessDetailList(Lists.newArrayList(new ProcessDetailDto().setProcessType(ProcessTypeEnums.TASK),
+                new ProcessDetailDto().setProcessType(ProcessTypeEnums.FEATURE),
+                new ProcessDetailDto().setProcessType(ProcessTypeEnums.CI),
+                new ProcessDetailDto().setProcessType(ProcessTypeEnums.PULL_REQUEST),
+                new ProcessDetailDto().setProcessType(ProcessTypeEnums.CODE_REVIEW),
+                new ProcessDetailDto().setProcessType(ProcessTypeEnums.MERGE))));
         deliveryProcessVo.setDeliveryProcess(new DeliveryProcessEntity().setName("test"));
         TaskDto taskDto = new TaskDto().setTitle("我的第一个开发发任务，所以我把他用来测试！哈哈哈")
-                .setSourceType(TaskSourceType.TRELLO)
-                .setTaskKey("QWER_!@#")
-                .setTaskUrl("https://trello.com/c/V5ieXJ5h");
+            .setSourceType(TaskSourceType.TRELLO)
+            .setTaskKey("QWER_!@#")
+            .setTaskUrl("https://trello.com/c/V5ieXJ5h");
         deliveryProcessVo.setItems(List.of(List.of(new DeliveryProcessVo.ItemVo().setProcessTypeEnums(ProcessTypeEnums.TASK).setProcessDetail(taskDto))));
         deliveryProcessVo.setMaxItemsSize(1);
 

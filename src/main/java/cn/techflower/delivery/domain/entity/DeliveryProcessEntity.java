@@ -25,6 +25,10 @@ public class DeliveryProcessEntity {
 
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "delivery_process_template_id")
+    private DeliveryProcessTemplateEntity deliveryProcessTemplate;
+
     @Column
     @CreatedBy
     private String createdBy;

@@ -1,6 +1,6 @@
 package cn.techflower.delivery.domain.entity;
 
-import cn.techflower.delivery.enums.ProcessTypeEnums;
+import cn.techflower.delivery.domain.dto.ProcessDetailDto;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,7 +32,7 @@ public class DeliveryProcessTemplateEntity {
     private String name;
 
     @Type(type = "json")
-    private List<ProcessTypeEnums> processTypeList;
+    private List<ProcessDetailDto> processDetailList;
 
     @Column
     @CreatedBy
