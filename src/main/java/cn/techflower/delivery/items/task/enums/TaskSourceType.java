@@ -6,6 +6,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum TaskSourceType {
-    TRELLO,
-    JIRA;
+    TRELLO("Trello"),
+    JIRA("Jira");
+
+    private final String desc;
 }

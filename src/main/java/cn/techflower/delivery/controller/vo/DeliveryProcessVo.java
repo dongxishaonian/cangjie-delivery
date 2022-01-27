@@ -14,7 +14,6 @@ public class DeliveryProcessVo {
     private DeliveryProcessTemplateEntity template;
     private DeliveryProcessEntity deliveryProcess;
     private List<List<ItemVo>> items;
-    private Integer maxItemsSize;
 
     @Data
     @Accessors(chain = true)
