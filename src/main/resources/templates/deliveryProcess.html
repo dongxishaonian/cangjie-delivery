@@ -28,112 +28,116 @@
 </script>
 
 <section>
-    <h1 style="margin-top:30px">软件交付流程示意图</h1>
-    <div style="width: 1600px;height:650px;overflow: scroll;margin-left: 30px;margin-top: 50px">
-        <table>
-            <tr style="margin-bottom: 15px">
-                <th style="font-size: x-large;height: 60px"
-                    th:each="process : ${DeliveryProcessDetail.template.processDetailList}">
-                    <i th:if="${process.processNode.equals(process.processNode.TASK)}" class="bi bi-card-checklist"></i>
-                    <i th:if="${process.processNode.equals(process.processNode.FEATURE)}" class="bi bi-git"></i>
-                    <i th:if="${process.processNode.equals(process.processNode.CI)}" class="bi bi-terminal-x"></i>
-                    <i th:if="${process.processNode.equals(process.processNode.CODE_REVIEW)}"
-                       class="bi bi-person-plus"></i>
-                    <i th:if="${process.processNode.equals(process.processNode.PULL_REQUEST)}"
-                       class="bi bi-chat-left-quote"></i>
-                    <i th:if="${process.processNode.equals(process.processNode.MERGE)}" class="bi bi-check2-all"></i>
-                    <span th:text="${process.processNode.desc}"></span>
-                </th>
-            </tr>
-            <tr th:each="items:${DeliveryProcessDetail.items}">
-                <td th:each="item:${items}">
+    <div style="width: 1800px">
+        <h1 style="margin-top:30px">软件交付流程示意图</h1>
+        <div style="width: 1600px;height:650px;overflow: scroll;margin-left: 30px;margin-top: 50px">
+            <table>
+                <tr style="margin-bottom: 15px">
+                    <th style="font-size: x-large;height: 60px"
+                        th:each="process : ${DeliveryProcessDetail.template.processDetailList}">
+                        <i th:if="${process.processNode.equals(process.processNode.TASK)}"
+                           class="bi bi-card-checklist"></i>
+                        <i th:if="${process.processNode.equals(process.processNode.FEATURE)}" class="bi bi-git"></i>
+                        <i th:if="${process.processNode.equals(process.processNode.CI)}" class="bi bi-terminal-x"></i>
+                        <i th:if="${process.processNode.equals(process.processNode.CODE_REVIEW)}"
+                           class="bi bi-person-plus"></i>
+                        <i th:if="${process.processNode.equals(process.processNode.PULL_REQUEST)}"
+                           class="bi bi-chat-left-quote"></i>
+                        <i th:if="${process.processNode.equals(process.processNode.MERGE)}"
+                           class="bi bi-check2-all"></i>
+                        <span th:text="${process.processNode.desc}"></span>
+                    </th>
+                </tr>
+                <tr th:each="items:${DeliveryProcessDetail.items}">
+                    <td th:each="item:${items}">
 
-                    <div class="card" style="width: 300px;height: 200px;margin-right: 10px"
-                         th:if="${item!=null && item.getProcessNodeEnums().name().equals('TASK')}">
-                        <div class="card-header">
-                            <b th:text="${item.getProcessDetail().sourceType.desc}">Trello</b>
-                        </div>
-                        <div class="card-body">
-                            <div style="width: 280px;height: 96px">
-                                <p><b>id：</b><span
-                                    th:text="${item.getProcessDetail().taskKey}">61dadaf233fe607882b17f38</span>
-                                </p>
-                                <p class="card-text  text-truncate" data-bs-toggle="tooltip" data-bs-placement="top"
-                                   th:title="${item.getProcessDetail().title}"
-                                   title="项目默认使用h2的数据库，保证本地能直接运行"><b>title：</b><span
-                                    th:text="${item.getProcessDetail().title}">项目默认使用h2的数据库，保证本地能直接运行</span></p>
+                        <div class="card" style="width: 300px;height: 200px;margin-right: 10px"
+                             th:if="${item!=null && item.getProcessNodeEnums().name().equals('TASK')}">
+                            <div class="card-header">
+                                <b th:text="${item.getProcessDetail().sourceType.desc}">Trello</b>
                             </div>
-                            <a th:href="${item.getProcessDetail().taskUrl}" href="https://trello.com/c/V5ieXJ5h"
-                               target="_blank" class="btn btn-primary">查看任务详情</a>
+                            <div class="card-body">
+                                <div style="width: 280px;height: 96px">
+                                    <p><b>id：</b><span
+                                        th:text="${item.getProcessDetail().taskKey}">61dadaf233fe607882b17f38</span>
+                                    </p>
+                                    <p class="card-text  text-truncate" data-bs-toggle="tooltip" data-bs-placement="top"
+                                       th:title="${item.getProcessDetail().title}"
+                                       title="项目默认使用h2的数据库，保证本地能直接运行"><b>title：</b><span
+                                        th:text="${item.getProcessDetail().title}">项目默认使用h2的数据库，保证本地能直接运行</span></p>
+                                </div>
+                                <a th:href="${item.getProcessDetail().taskUrl}" href="https://trello.com/c/V5ieXJ5h"
+                                   target="_blank" class="btn btn-primary">查看任务详情</a>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="card" style="width: 300px;height: 200px;margin-right: 10px"
-                         th:if="${item!=null && item.getProcessNodeEnums().name().equals('FEATURE')}">
-                        <div class="card-header">
-                            Github
+                        <div class="card" style="width: 300px;height: 200px;margin-right: 10px"
+                             th:if="${item!=null && item.getProcessNodeEnums().name().equals('FEATURE')}">
+                            <div class="card-header">
+                                Github
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Special title treatment</h5>
+                                <p class="card-text">With supporti</p>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">With supporti</p>
-                        </div>
-                    </div>
 
-                    <div class="card" style="width: 300px;height: 200px;margin-right: 10px"
-                         th:if="${item!=null && item.getProcessNodeEnums().name().equals('CI')}">
-                        <div class="card-header">
-                            Github Action
+                        <div class="card" style="width: 300px;height: 200px;margin-right: 10px"
+                             th:if="${item!=null && item.getProcessNodeEnums().name().equals('CI')}">
+                            <div class="card-header">
+                                Github Action
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Special title treatment</h5>
+                                <p class="card-text">With to additional
+                                    content.</p>
+                                <a href="#" class="btn btn-primary">查看详情</a>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">With to additional
-                                content.</p>
-                            <a href="#" class="btn btn-primary">查看详情</a>
-                        </div>
-                    </div>
 
-                    <div class="card" style="width: 300px;height: 200px;margin-right: 10px"
-                         th:if="${item!=null && item.getProcessNodeEnums().name().equals('PULL_REQUEST')}">
-                        <div class="card-header">
-                            Github
+                        <div class="card" style="width: 300px;height: 200px;margin-right: 10px"
+                             th:if="${item!=null && item.getProcessNodeEnums().name().equals('PULL_REQUEST')}">
+                            <div class="card-header">
+                                Github
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Special title treatment</h5>
+                                <p class="card-text">With supporting text below as a natural lead-in to additional
+                                    content.</p>
+                                <a href="#" class="btn btn-primary">发起合并</a>
+                                <a href="#" class="btn btn-primary">查看合并</a>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional
-                                content.</p>
-                            <a href="#" class="btn btn-primary">发起合并</a>
-                            <a href="#" class="btn btn-primary">查看合并</a>
-                        </div>
-                    </div>
 
-                    <div class="card" style="width: 300px;height: 200px;margin-right: 10px"
-                         th:if="${item!=null && item.getProcessNodeEnums().name().equals('CODE_REVIEW')}">
-                        <div class="card-header">
-                            Gerrit
+                        <div class="card" style="width: 300px;height: 200px;margin-right: 10px"
+                             th:if="${item!=null && item.getProcessNodeEnums().name().equals('CODE_REVIEW')}">
+                            <div class="card-header">
+                                Gerrit
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Special title treatment</h5>
+                                <p class="card-text">With supporting text below as a natural lead-in to additional
+                                    content.</p>
+                                <a href="#" class="btn btn-primary">查看详情</a>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional
-                                content.</p>
-                            <a href="#" class="btn btn-primary">查看详情</a>
-                        </div>
-                    </div>
 
-                    <div class="card" style="width: 300px;height: 200px;margin-right: 10px"
-                         th:if="${item!=null && item.getProcessNodeEnums().name().equals('MERGE')}">
-                        <div class="card-header">
-                            Github
+                        <div class="card" style="width: 300px;height: 200px;margin-right: 10px"
+                             th:if="${item!=null && item.getProcessNodeEnums().name().equals('MERGE')}">
+                            <div class="card-header">
+                                Github
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Special title treatment</h5>
+                                <p class="card-text">With supporting text below as a natural lead-in to additional
+                                    content.</p>
+                                <a href="#" class="btn btn-primary">查看详情</a>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional
-                                content.</p>
-                            <a href="#" class="btn btn-primary">查看详情</a>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
 </section>
 

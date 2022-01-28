@@ -6,6 +6,7 @@ import cn.techflower.delivery.domain.dto.ProcessDetailDto;
 import cn.techflower.delivery.domain.entity.DeliveryProcessEntity;
 import cn.techflower.delivery.domain.entity.DeliveryProcessTemplateEntity;
 import cn.techflower.delivery.enums.ProcessNodeEnums;
+import cn.techflower.delivery.enums.ProcessToolEnums;
 import cn.techflower.delivery.items.ci.domain.dto.CiDto;
 import cn.techflower.delivery.items.feature.domain.dto.FeatureDto;
 import cn.techflower.delivery.items.task.domian.dto.TaskDto;
@@ -13,11 +14,15 @@ import cn.techflower.delivery.items.task.enums.TaskSourceType;
 import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Controller
 @Slf4j
@@ -72,5 +77,21 @@ public class DeliveryController {
     @GetMapping("/leftBar")
     public String leftBar() {
         return "leftBar";
+    }
+
+    @GetMapping(value = "/deliveryProcessTypeList", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> getDeliveryProcessTypeList() {
+        StringBuilder content = new StringBuilder();
+        Stream.of(ProcessNodeEnums.values()).forEach(p -> content.append(String.format("<option value=\"%s\">%s</option>", p.name(), p.getDesc())));
+        return ResponseEntity.ok(content.toString());
+    }
+
+    @GetMapping(value = "/processToolList", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> getProcessToolList(@RequestParam ProcessNodeEnums nodeType) {
+        StringBuilder content = new StringBuilder();
+        Stream.of(ProcessToolEnums.values())
+            .filter(f -> f.getProcessNode().contains(nodeType))
+            .forEach(p -> content.append(String.format("<option value=\"%s\">%s</option>", p.name(), p.getDesc())));
+        return ResponseEntity.ok(content.toString());
     }
 }
