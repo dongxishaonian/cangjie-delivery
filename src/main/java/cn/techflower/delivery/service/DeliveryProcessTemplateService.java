@@ -6,6 +6,7 @@ import cn.techflower.delivery.presistence.DeliveryProcessTemplateRepository;
 import cn.techflower.foundation.error.BusinessException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +20,10 @@ public class DeliveryProcessTemplateService {
     private final DeliveryProcessTemplateRepository deliveryProcessTemplateRepository;
 
     public void createDeliveryProcessTemplate(String name, List<ProcessDetailDto> processTypeList) {
-        List<DeliveryProcessTemplateEntity> allByCreatedBy = deliveryProcessTemplateRepository.findAllByCreatedBy(name);
+        String authName = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        List<DeliveryProcessTemplateEntity> allByCreatedBy = deliveryProcessTemplateRepository.findAllByCreatedBy(authName);
+
         boolean alreadyExist = allByCreatedBy.stream().anyMatch(a -> a.getProcessDetailList().equals(processTypeList));
         if (alreadyExist) {
             throw new BusinessException(DELIVERY_PROCESS_TEMPLATE_ALREADY_EXIST);

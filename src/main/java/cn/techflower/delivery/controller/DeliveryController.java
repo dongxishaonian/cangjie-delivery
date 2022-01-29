@@ -69,11 +69,6 @@ public class DeliveryController {
         return "deliveryProcess";
     }
 
-    @GetMapping("/processTemplate")
-    public String deliveryProcessTemplate() {
-        return "processTemplate";
-    }
-
     @GetMapping("/leftBar")
     public String leftBar() {
         return "leftBar";

@@ -41,10 +41,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form id="create-template-form" action="/template" method="post">
                             <div class="mb-3">
                                 <label for="recipient-name" class="col-form-label">模板名称</label>
-                                <input type="text" class="form-control" id="recipient-name">
+                                <input name="templateName" type="text" class="form-control" id="recipient-name">
                             </div>
                             <div class="mb-3" style="overflow: scroll">
                                 <label for="recipient-name" class="col-form-label">流程定义</label>
@@ -54,14 +54,16 @@
                                         <td>
                                             <div class="step"
                                                  style="padding: 5px;width: 220px;height: 160px;border-width: thin;border-style: solid">
-                                                <button style="display: flex;float: right" type="button"
+                                                <button id="processNode-delete" style="display: flex;float: right"
+                                                        type="button"
                                                         class="btn-close" aria-label="Close"></button>
-                                                <select class="form-select process-type"
+                                                <select name="nodeType" class="form-select process-type"
                                                         aria-label="Default select example">
                                                     <option selected>请选择节点类型</option>
                                                 </select>
-
-                                                <select class="form-select" aria-label="Default select example">
+                                                <br/>
+                                                <select name="nodeTool" class="form-select"
+                                                        aria-label="Default select example">
                                                     <option selected>请选择工具</option>
                                                 </select>
 
@@ -74,7 +76,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary">创建</button>
+                        <button id="create-template" type="button" class="btn btn-primary" data-bs-dismiss="modal">创建
+                        </button>
                     </div>
                 </div>
             </div>
@@ -93,13 +96,37 @@
 </body>
 <script>
     $("#addStep").click(function () {
-        var txt1 = "<td><div  class=\"step\" style=\"width: 40px;height: 40px;background-color: salmon\"></div></td>";
-        $("#steps-list").append(txt1)
+        $.ajax({
+            url: "/deliveryProcessTypeList",
+            async: false,
+            success: function (data) {
+                console.log(data);
+                var txt1 = "<td>\n" +
+                    "                                            <div class=\"step\"\n" +
+                    "                                                 style=\"padding: 5px;width: 220px;height: 160px;border-width: thin;border-style: solid\">\n" +
+                    "                                                <button id=\"processNode-delete\" style=\"display: flex;float: right\"\n" +
+                    "                                                        type=\"button\"\n" +
+                    "                                                        class=\"btn-close\" aria-label=\"Close\"></button>\n" +
+                    "                                                <select name=\"nodeType\" class=\"form-select process-type\"\n" +
+                    "                                                        aria-label=\"Default select example\">\n" +
+                    "                                                    <option selected>请选择节点类型</option>\n" + data +
+                    "                                                </select>\n" +
+                    "                                                <br/>\n" +
+                    "                                                <select name=\"nodeTool\" class=\"form-select\"\n" +
+                    "                                                        aria-label=\"Default select example\">\n" +
+                    "                                                    <option selected>请选择工具</option>\n" +
+                    "                                                </select>\n" +
+                    "\n" +
+                    "                                            </div>\n" +
+                    "                                        </td>";
+                $("#steps-list").append(txt1)
+            }
+        });
     })
 
-    // $(document).on("click", ".step", function () {
-    //     $(this).parent().remove();
-    // })
+    $(document).on("click", "#processNode-delete", function () {
+        $(this).parent().parent().remove();
+    })
 </script>
 <script>
     $.get("/deliveryProcessTypeList", function (result) {
@@ -107,16 +134,32 @@
         $(".process-type").append(result);
     });
 
-    $(".process-type").change(function () {
+    $(document).on("change", ".process-type", function () {
         var currentType = $(this).val();
-        var nextDom = $(this).next();
+        var nextDom = $(this).next().next();
         $.ajax({
             url: "/processToolList",
             data: {nodeType: currentType},
             async: false,
             success: function (data) {
                 console.log(data);
+                nextDom.empty();
                 nextDom.append(data);
+            }
+        });
+    })
+
+    $("#create-template").click(function () {
+        $.ajax({
+            type: "POST",
+            url: "/template" ,
+            data: $("#create-template-form").serialize(),
+            success: function (result) {
+                console.log(result);
+            },
+            error : function(q,w,e) {
+                console.log(q);
+                alert(q.responseJSON.message);
             }
         });
     })
