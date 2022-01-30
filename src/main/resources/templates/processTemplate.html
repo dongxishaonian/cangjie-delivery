@@ -59,12 +59,12 @@
                                                         class="btn-close" aria-label="Close"></button>
                                                 <select name="nodeType" class="form-select process-type"
                                                         aria-label="Default select example">
-                                                    <option selected>请选择节点类型</option>
+                                                    <option disabled="disabled" selected>请选择节点类型</option>
                                                 </select>
                                                 <br/>
                                                 <select name="nodeTool" class="form-select"
                                                         aria-label="Default select example">
-                                                    <option selected>请选择工具</option>
+                                                    <option selected disabled="disabled" >请选择工具</option>
                                                 </select>
 
                                             </div>
@@ -109,12 +109,12 @@
                     "                                                        class=\"btn-close\" aria-label=\"Close\"></button>\n" +
                     "                                                <select name=\"nodeType\" class=\"form-select process-type\"\n" +
                     "                                                        aria-label=\"Default select example\">\n" +
-                    "                                                    <option selected>请选择节点类型</option>\n" + data +
+                    "                                                    <option  disabled=\"disabled\" selected>请选择节点类型</option>\n" + data +
                     "                                                </select>\n" +
                     "                                                <br/>\n" +
                     "                                                <select name=\"nodeTool\" class=\"form-select\"\n" +
                     "                                                        aria-label=\"Default select example\">\n" +
-                    "                                                    <option selected>请选择工具</option>\n" +
+                    "                                                    <option  disabled=\"disabled\" selected>请选择工具</option>\n" +
                     "                                                </select>\n" +
                     "\n" +
                     "                                            </div>\n" +
@@ -150,6 +150,7 @@
     })
 
     $("#create-template").click(function () {
+
         $.ajax({
             type: "POST",
             url: "/template" ,
