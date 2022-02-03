@@ -32,4 +32,10 @@ public class DeliveryProcessTemplateService {
         deliveryProcessTemplateRepository.save(new DeliveryProcessTemplateEntity().setName(name).setProcessDetailList(processTypeList));
     }
 
+    public List<DeliveryProcessTemplateEntity> getTemplateList() {
+        String authName = SecurityContextHolder.getContext().getAuthentication().getName();
+        return deliveryProcessTemplateRepository.findAllByCreatedBy(authName);
+    }
+
+
 }

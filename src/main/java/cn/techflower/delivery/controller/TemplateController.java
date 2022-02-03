@@ -2,6 +2,7 @@ package cn.techflower.delivery.controller;
 
 import cn.techflower.delivery.controller.vo.CreateProcessTemplateVo;
 import cn.techflower.delivery.domain.dto.ProcessDetailDto;
+import cn.techflower.delivery.domain.entity.DeliveryProcessTemplateEntity;
 import cn.techflower.delivery.enums.ProcessNodeEnums;
 import cn.techflower.delivery.enums.ProcessToolEnums;
 import cn.techflower.delivery.service.DeliveryProcessTemplateService;
@@ -13,6 +14,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +33,9 @@ public class TemplateController {
     private final DeliveryProcessTemplateService deliveryProcessTemplateService;
 
     @GetMapping("/processTemplate")
-    public String deliveryProcessTemplate() {
+    public String deliveryProcessTemplate(Model model) {
+        List<DeliveryProcessTemplateEntity> templateList = deliveryProcessTemplateService.getTemplateList();
+        model.addAttribute("templateList", templateList);
         return "processTemplate";
     }
 
