@@ -13,12 +13,12 @@
 <head>
     <meta charset="UTF-8">
 
-    <title>cangjie-delivery</title>
+    <title>「仓颉」研发流程管理工具</title>
 </head>
 <body style="height: 100%;">
 
 <header>
-    <h1>CangJie-Delivery</h1>
+    <h1>仓颉-研发流程管理工具</h1>
 </header>
 
 <nav id="nav"></nav>
@@ -49,11 +49,11 @@
                         <table>
                             <tr>
                                 <td th:each="detail:${template.getProcessDetailList()}">
-                                    <div  class="border border-secondary"
-                                        style="padding: 5px;width: 180px;height: 100px;">
+                                    <div  class="border"
+                                        style="padding: 5px;width: 170px;height: 60px;">
                                         <span><b>节点类型：</b></span>
                                         <span th:text="${detail.processNode.getDesc()}"></span>
-                                        <br><br>
+                                        <br>
                                         <span><b>工具：</b></span>
                                         <span th:text="${detail.getProcessTools().get(0).getDesc()}"></span>
                                     </div>

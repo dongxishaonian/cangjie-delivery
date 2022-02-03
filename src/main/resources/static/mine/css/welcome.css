@@ -3,7 +3,7 @@ header {
   color: white;
   text-align: center;
   padding: 5px;
-  height:auto;
+  height: auto;
 }
 
 nav {
@@ -16,9 +16,10 @@ nav {
 }
 
 section {
-  width: 500px;
-  float: left;
   padding: 10px;
+  height: 90%;
+  overflow: scroll;
+  overflow-scrolling: auto;
 }
 
 footer {
