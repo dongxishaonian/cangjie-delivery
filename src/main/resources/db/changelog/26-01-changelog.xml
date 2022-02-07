@@ -14,7 +14,7 @@
             <column name="trello_token" type="VARCHAR(255)"/>
             <column name="owner" type="VARCHAR(255)"/>
             <column name="created_by" type="VARCHAR(255)"/>
-            <column name="last_modified_by" type="DATETIME"/>
+            <column name="last_modified_by" type="VARCHAR(255)"/>
             <column name="created" type="DATETIME"/>
             <column name="updated" type="DATETIME"/>
         </createTable>

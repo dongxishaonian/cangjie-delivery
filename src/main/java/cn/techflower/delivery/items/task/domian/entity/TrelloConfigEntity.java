@@ -37,7 +37,7 @@ public class TrelloConfigEntity {
 
     @Column
     @LastModifiedBy
-    private LocalDateTime lastModifiedBy;
+    private String lastModifiedBy;
 
     @Column
     @CreatedDate

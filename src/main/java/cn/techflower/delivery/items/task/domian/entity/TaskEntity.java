@@ -44,7 +44,7 @@ public class TaskEntity {
 
     @Column
     @LastModifiedBy
-    private LocalDateTime lastModifiedBy;
+    private String lastModifiedBy;
 
     @Column
     @CreatedDate

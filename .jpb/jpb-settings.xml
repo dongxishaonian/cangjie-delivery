@@ -8,4 +8,8 @@
       </database-info>
     </database-infos>
   </component>
+  <component name="JpaLiquibaseChangesConfig">
+    <exclude-change idName="FKmp37d1hsq2k64q54y7w2gk8o4" tagName="dropForeignKeyConstraint" />
+    <exclude-change idName="FKneuw51xy9npa11lv68oqx0dcn" tagName="dropForeignKeyConstraint" />
+  </component>
 </project>

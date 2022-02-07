@@ -13,7 +13,7 @@
             <column name="name" type="VARCHAR(255)"/>
             <column name="process_detail_list" type="VARCHAR(255)"/>
             <column name="created_by" type="VARCHAR(255)"/>
-            <column name="last_modified_by" type="DATETIME"/>
+            <column name="last_modified_by" type="VARCHAR(255)"/>
             <column name="created" type="DATETIME"/>
             <column name="updated" type="DATETIME"/>
         </createTable>

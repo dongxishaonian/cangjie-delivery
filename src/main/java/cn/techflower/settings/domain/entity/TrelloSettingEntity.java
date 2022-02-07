@@ -1,4 +1,4 @@
-package cn.techflower.delivery.domain.entity;
+package cn.techflower.settings.domain.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,18 +16,18 @@ import java.time.LocalDateTime;
 @Setter
 @Accessors(chain = true)
 @Entity
-@Table(name = "delivery_process")
+@Table(name = "trello_setting")
 @EntityListeners(AuditingEntityListener.class)
-public class DeliveryProcessEntity {
+public class TrelloSettingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    private String name;
+    private String oauthConsumerKey;
 
-    @ManyToOne
-    @JoinColumn(name = "delivery_process_template_id")
-    private DeliveryProcessTemplateEntity deliveryProcessTemplate;
+    private String oauthToken;
+
+    private String owner;
 
     @Column
     @CreatedBy

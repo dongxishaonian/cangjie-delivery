@@ -12,7 +12,7 @@
             </column>
             <column name="name" type="VARCHAR(255)"/>
             <column name="created_by" type="VARCHAR(255)"/>
-            <column name="last_modified_by" type="DATETIME"/>
+            <column name="last_modified_by" type="VARCHAR(255)"/>
             <column name="created" type="DATETIME"/>
             <column name="updated" type="DATETIME"/>
         </createTable>
@@ -28,7 +28,7 @@
             <column name="task_url" type="VARCHAR(255)"/>
             <column name="delivery_process_id" type="BIGINT"/>
             <column name="created_by" type="VARCHAR(255)"/>
-            <column name="last_modified_by" type="DATETIME"/>
+            <column name="last_modified_by" type="VARCHAR(255)"/>
             <column name="created" type="DATETIME"/>
             <column name="updated" type="DATETIME"/>
         </createTable>
