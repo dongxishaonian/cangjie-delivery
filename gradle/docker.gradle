@@ -1,0 +1,24 @@
+jib {
+    from {
+        image = "docker://eclipse-temurin:11-jre-focal"
+    }
+    to {
+        image = "cangjie-delivery:latest"
+    }
+    container {
+        entrypoint = ["bash", "-c", "/entrypoint.sh"]
+        ports = ["8088"]
+        environment = [
+            SPRING_OUTPUT_ANSI_ENABLED: "ALWAYS",
+            JHIPSTER_SLEEP: "0",
+            SPRING_PROFILES_ACTIVE: "single"
+        ]
+        creationTime = "USE_CURRENT_TIMESTAMP"
+        user = 1000
+    }
+    extraDirectories {
+      paths = file("src/main/docker/jib")
+      permissions = ["/entrypoint.sh": "755"]
+    }
+}
+
