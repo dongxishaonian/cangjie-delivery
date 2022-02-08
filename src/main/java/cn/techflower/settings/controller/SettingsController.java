@@ -5,15 +5,14 @@ import cn.techflower.settings.domain.entity.TrelloSettingEntity;
 import cn.techflower.settings.service.TrelloSettingService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 
 @Controller("/settings")
 @Slf4j
@@ -30,8 +29,8 @@ public class SettingsController {
     }
 
     @PostMapping("/trelloSetting")
-    public void createTrelloSetting(@ModelAttribute @Valid TrelloSettingVo trelloSettingVo, HttpServletResponse response) throws IOException {
+    public ResponseEntity<?> createTrelloSetting(@ModelAttribute @Valid TrelloSettingVo trelloSettingVo) {
         trelloSettingService.createTrelloSetting(trelloSettingVo);
-        response.sendRedirect("/settings");
+        return ResponseEntity.ok().build();
     }
 }

@@ -22,7 +22,7 @@ public class DeliveryProcessTemplateService {
     public void createDeliveryProcessTemplate(String name, List<ProcessDetailDto> processTypeList) {
         String authName = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        List<DeliveryProcessTemplateEntity> allByCreatedBy = deliveryProcessTemplateRepository.findAllByCreatedBy(authName);
+        List<DeliveryProcessTemplateEntity> allByCreatedBy = deliveryProcessTemplateRepository.findAllByCreatedByOrderByCreatedDesc(authName);
 
         boolean alreadyExist = allByCreatedBy.stream().anyMatch(a -> a.getProcessDetailList().equals(processTypeList));
         if (alreadyExist) {
@@ -34,7 +34,7 @@ public class DeliveryProcessTemplateService {
 
     public List<DeliveryProcessTemplateEntity> getTemplateList() {
         String authName = SecurityContextHolder.getContext().getAuthentication().getName();
-        return deliveryProcessTemplateRepository.findAllByCreatedBy(authName);
+        return deliveryProcessTemplateRepository.findAllByCreatedByOrderByCreatedDesc(authName);
     }
 
 

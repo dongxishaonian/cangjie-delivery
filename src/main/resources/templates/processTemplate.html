@@ -39,6 +39,7 @@
                 <th scope="col">模板名称</th>
                 <th scope="col">模板概览</th>
                 <th scope="col">创建人</th>
+                <th scope="col">创建时间</th>
             </tr>
             </thead>
             <tbody>
@@ -62,7 +63,8 @@
                         </table>
                     </div>
                 </td>
-                <td th:text="${template.created.toString()}">@mdo</td>
+                <td th:text="${template.getCreatedBy().toString()}">@mdo</td>
+                <td th:text="${template.getCreated().toLocalDate()}">@mdo</td>
             </tr>
             </tbody>
         </table>
@@ -183,13 +185,13 @@
     })
 
     $("#create-template").click(function () {
-
         $.ajax({
             type: "POST",
             url: "/template",
             data: $("#create-template-form").serialize(),
             success: function (result) {
                 console.log(result);
+                window.location.reload ();
             },
             error: function (q, w, e) {
                 console.log(q);

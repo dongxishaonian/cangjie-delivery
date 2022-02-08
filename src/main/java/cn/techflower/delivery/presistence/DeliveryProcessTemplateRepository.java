@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface DeliveryProcessTemplateRepository extends JpaRepository<DeliveryProcessTemplateEntity, Long>, JpaSpecificationExecutor<DeliveryProcessTemplateEntity> {
-    List<DeliveryProcessTemplateEntity> findAllByCreatedBy(String createdBy);
+    List<DeliveryProcessTemplateEntity> findAllByCreatedByOrderByCreatedDesc(String createdBy);
 }
