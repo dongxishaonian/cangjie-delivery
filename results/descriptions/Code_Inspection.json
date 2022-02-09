@@ -1122,16 +1122,16 @@
           "description": "Reports method and constructor calls that implicitly use the platform default charset. These calls can produce different results on systems that use different default charsets. It might result in unexpected behaviour.\n\n**Example:**\n\n    void foo(byte[] bytes) {\n      String s = new String(bytes);\n    }\n\nYou can use a quick-fix that specifies the explicit UTF-8 charset if the corresponding overloaded method is available.\nAfter the quick-fix is applied:\n\n    void foo(byte[] bytes) {\n      String s = new String(bytes, StandardCharsets.UTF_8);\n    }\n"
         },
         {
-          "shortName": "StringTokenizer",
-          "displayName": "Use of StringTokenizer",
-          "enabled": false,
-          "description": "Reports usages of the `StringTokenizer` class. Excessive use of `StringTokenizer` is incorrect in an internationalized environment."
-        },
-        {
           "shortName": "UnnecessaryUnicodeEscape",
           "displayName": "Unnecessary unicode escape sequence",
           "enabled": false,
           "description": "Reports unnecessary unicode escape sequences. For example, when the file encoding can handle the character without escaping it. Unicode control characters are not reported by this inspection (except for a line feed and a tab).\n\n**Example:**\n\n    String s = \"\\u0062\";\n"
+        },
+        {
+          "shortName": "StringTokenizer",
+          "displayName": "Use of StringTokenizer",
+          "enabled": false,
+          "description": "Reports usages of the `StringTokenizer` class. Excessive use of `StringTokenizer` is incorrect in an internationalized environment."
         },
         {
           "shortName": "NumericToString",
@@ -2206,6 +2206,341 @@
       ]
     },
     {
+      "name": "Code",
+      "inspections": [
+        {
+          "shortName": "SpringTestingSqlInspection",
+          "displayName": "Invalid @Sql and @SqlGroup configurations",
+          "enabled": true,
+          "description": "Reports unresolved file references in the `scripts` attributes of the\n[@Sql](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/context/jdbc/Sql.html)\nannotation and the corresponding aliased attributes of the `@Sql` meta annotations.\n\n**Example:**\n\n\n      @SqlGroup({\n         @Sql(\"not-found\"), // reports \"Cannot resolve file 'not-found\"\n         @Sql(\"found.sql\")\n      })\n      public class MyTestWithSqlData {...}\n"
+        },
+        {
+          "shortName": "SpringJavaAutowiredFieldsWarningInspection",
+          "displayName": "Non recommended 'field' injections",
+          "enabled": true,
+          "description": "Reports injected or autowired fields in Spring components.\n\nThe quick-fix suggests the recommended constructor-based dependency injection in beans\nand assertions for mandatory fields.\n\n**Example:**\n\n\n    class MyComponent {\n      @Inject MyCollaborator collaborator; // injected field\n\n      public void myBusinessMethod() {\n        collaborator.doSomething(); // throws NullPointerException\n      }\n    }\n\n<br />\n\nAfter applying the quick-fix:\n\n\n    class MyComponent {\n\n      private final MyCollaborator collaborator;\n\n      @Inject\n      public MyComponent(MyCollaborator collaborator) {\n        Assert.notNull(collaborator, \"MyCollaborator must not be null!\");\n        this.collaborator = collaborator;\n      }\n\n      public void myBusinessMethod() {\n        collaborator.doSomething(); // now this call is safe\n      }\n    }\n"
+        },
+        {
+          "shortName": "SpringContextConfigurationInspection",
+          "displayName": "Invalid @ContextConfiguration",
+          "enabled": true,
+          "description": "Reports incorrect Spring context configurations.\n\n* Unresolved files and directories in `locations` attributes and corresponding aliased attributes of `@ContextConfiguration` meta annotations\n* Missing default application context file\n\nFor more information, see [@ContextConfiguration](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/context/ContextConfiguration.html).\n\n**Example:**\n\n\n      @ContextConfiguration(locations = \"classpath:META-INF/unknown-context.xml\") // reports \"Cannot resolve file 'unknown-context.xml'\"\n      class MyTests {...}\n"
+        },
+        {
+          "shortName": "SpringRequiredAnnotationInspection",
+          "displayName": "@Required Spring bean property is not injected",
+          "enabled": true,
+          "description": "Reports `@Required` setter bean properties that are not injected or autowired.\n\n**Example:**\n\n\n    <beans>\n      <bean class=\"beans.MyComponent\" id=\"foo\"/>\n      // reports \"Required properties missing: 'port'\"\n    </beans>\n\n\n    *** ** * ** ***\n\n\n\n    public class MyComponent {\n       @Required\n       public void setPort(int port) // reports \"Required property 'port' is not injected\"\n       {...}\n    }\n"
+        },
+        {
+          "shortName": "SpringCacheableComponentsInspection",
+          "displayName": "Incorrectly configured 'caching' annotation",
+          "enabled": true,
+          "description": "Reports incorrect 'caching' annotations: `@Cacheable`, `@CacheEvict`, `@CachePut`, `@CacheConfig`, and so on.\n\n**Example:**\n\n\n    @org.springframework.stereotype.Component\n    public class MyCacheManager implements CacheManager{... }\n\n    public class MyConfiguration {\n       @Cacheable(value = \"a\",\n           cacheResolver =\"myCacheManager\") // reports \"Bean must be of 'org.springframework.cache.interceptor.CacheResolver' type\"\n       public String getCache(String isbn) { ...}\n\n       @Cacheable(value = \"abc\",\n       private String getAbc() // reports \"Caching annotations should be defined on public methods\"\n       {...}\n    }\n"
+        },
+        {
+          "shortName": "SpringComponentScan",
+          "displayName": "Invalid package in @ComponentScan or its meta annotation",
+          "enabled": true,
+          "description": "Reports unresolved packages in\n[@ComponentScan](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/ComponentScan.html)\nannotations and corresponding aliased attributes of `@ComponentScan` meta annotations.  \n\n**Example:**\n\n\n      @ComponentScan(basePackages = {\n         \"com.my.company\",\n         \"com.unknown\" // reports \"'Cannot resolve package 'unknown'\"\n      }) +\n      @Configuration +\n      public class MyConfiguration {}\n"
+        },
+        {
+          "shortName": "ScheduledMethodInspection",
+          "displayName": "Incorrect @Scheduled method signature",
+          "enabled": true,
+          "description": "Reports incorrect [@Scheduled](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/annotation/Scheduled.html) methods.\n\nAccording to Spring Documentation, methods to be scheduled must return void and must not expect any arguments.\nIf the method needs to interact with other objects from the Application Context,\nthey should be provided through dependency injection."
+        },
+        {
+          "shortName": "SpringLookupInjectionInspection",
+          "displayName": "Incorrectly referenced bean in @Lookup annotation of Spring component",
+          "enabled": true,
+          "description": "Reports incorrect bean references in the `value` parameter of the\n[@Lookup](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/annotation/Lookup.html)\nannotation.\n\n**Example:**\n\n\n      @Component public class FooBean {...}\n      @Component public class OtherBean {...}\n\n      @Component public class MyComponent {\n      @Lookup(\"fooBean\")\n      public FooBean fooBean() {...}\n\n      @Lookup(\"fooBean\") // reports \"Bean must be of 'OtherBean' type\"\n      public OtherBean otherBean() {...}\n\n      @Lookup(\"unknown\") // reports \"Cannot resolve bean 'unknown'\"\n      public OtherBean fooBean() {...}\n      }\n"
+        },
+        {
+          "shortName": "SpringTestingTransactionalInspection",
+          "displayName": "Invalid transactional lifecycle method declaration",
+          "enabled": true,
+          "description": "Reports invalid transactional lifecycle method declarations annotated with\n[@BeforeTransaction](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/context/transaction/BeforeTransaction.html)\nand [@AfterTransaction](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/context/transaction/AfterTransaction.html)\nin testing classes annotated as\n[@Transactional](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html).\n\nAnnotated methods must have no arguments and no return type.\n\n**Example:**\n\n\n      @ContextConfiguration\n      @Transactional\n      public class AbstractShowcaseTest {\n        @BeforeTransaction // Expected method return type is 'void'\n        public boolean setupData() {...}\n\n        @AfterTransaction // Wrong number of arguments\n        public void disposeData(boolean a) throws Exception {...}\n      }\n"
+        },
+        {
+          "shortName": "AsyncMethodInspection",
+          "displayName": "Incorrect @Async method signature",
+          "enabled": true,
+          "description": "Reports incorrect return types of [@Async](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/annotation/Async.html) methods.\n\nFor target method signatures, any parameter types are allowed.\nHowever, the return type should be either `void` or [Future](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Future.html).\nIt is also possible to return the more specific [ListenableFuture](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/concurrent/ListenableFuture.html) or [CompletableFuture](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html) types,\nwhich allow for richer interaction with the asynchronous task and for immediate composition with further processing steps."
+        },
+        {
+          "shortName": "SpringJavaInjectionPointsAutowiringInspection",
+          "displayName": "Incorrect injection point autowiring in Spring bean components",
+          "enabled": false,
+          "description": "Reports autowiring problems on injection points of Spring beans:\n\n* More than one bean of 'concrete' type\n* No beans of 'concrete' type\n* No bean with qualifier\n* Autowired method or constructor without parameters\n\n**Example:**\n\n```\npublic interface FooInterface {...}\n  @Component public class FooBean implements FooInterface {...}\n  @Component public class OtherBean implements FooInterface {...}\n\n@Component\npublic class MyComponent {\n\t@Autowired\n\tFooInterface foo;  // \"Could not autowire. There is more than one bean of 'FooInterface' type.\n                     // Beans: fooBean(FooBean.java), otherBean(OtherBean.java)\"\n}\n```"
+        },
+        {
+          "shortName": "SpringJavaConstructorAutowiringInspection",
+          "displayName": "Autowiring issues in a Spring bean class constructors",
+          "enabled": true,
+          "description": "Reports incorrect usages of `@Autowired` on Spring bean constructors:\nmore than one `@Autowired` constructor, no matching `@Autowired` constructor, and so on.\n\n**Example:**\n\n\n    @Component\n    public class MyComponent {\n    \t@Autowired\n    \tpublic MyComponent(BarBean bean) {...} // reports 'Only one @Autowired constructor is allowed'\n\n    \t@Autowired\n    \tpublic MyComponent(FooBean bean) {...} // reports 'Only one @Autowired constructor is allowed'\n    }\n\n    @Component\n    public class MyFactory {  // reports ' No matching @Autowired constructor'\n    \tpublic MyFactory(String str) {...}\n    \tpublic MyFactory(int count) {...}\n    }\n"
+        },
+        {
+          "shortName": "SpringEventListenerInspection",
+          "displayName": "Incorrectly configured  @EventListener methods ",
+          "enabled": true,
+          "description": "Reports incorrect\n[@EventListener](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/event/EventListener.html) methods.\n\n**Example:**\n\n\n      @Configuration @ComponentScan\n      open class Config\n\n      data class MyEvent(val string: String)\n\n      @Component\n      class LogComponent {\n        @EventListener // Method annotated with @EventListener must be public\n        private fun logCommands(commandName: MyEvent) {}\n\n        @EventListener // Method must have maximum one parameter\n        fun processCommand(commandName: MyEvent, text: String) {}\n      }\n"
+        },
+        {
+          "shortName": "ContextJavaBeanUnresolvedMethodsInspection",
+          "displayName": "Unknown init/destroy method in the @Bean annotation",
+          "enabled": true,
+          "description": "Reports unresolved method references on `initMethod` and `destroyMethod` parameters\nof the [@Bean](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/Bean.html) annotation.\n\n**Example:**\n\"Cannot resolve method\" will be reported on 'doInit' expression if MyBean class doesn't contain 'public void 'doInit'(){...}' method\n\n\n      public class MyBean {...}\n\n      @Component\n      public class MyComponent {\n         @Bean(initMethod=\"doInit\" )\n         public MyBean myBean() {...}\n      }\n\nIn this example, the inspection will report an unresolved method reference if `MyBean` doesn't define the `doInit()` method."
+        },
+        {
+          "shortName": "SpringCacheAnnotationsOnInterfaceInspection",
+          "displayName": "Cache* annotations defined on interfaces/interface methods",
+          "enabled": true,
+          "description": "Reports `@Cache*` annotations on interfaces.\n\nYou should annotate only concrete classes (and methods of concrete classes) with `@Cache*`.\nAnnotating an interface (or an interface method) with `@Cache*` requires using interface-based proxies.\nSince Java annotations are not inherited from interfaces, the proxying and weaving infrastructure will not be able to recognize the caching settings\nwhen using class-based proxies (`proxy-target-class=\"true\"`) or the weaving-based aspect (`mode=\"aspectj\"`).\nAs a result, the object will not be wrapped in a caching proxy."
+        },
+        {
+          "shortName": "SpringDependsOnUnresolvedBeanInspection",
+          "displayName": "Incorrectly referenced bean in @DependsOn annotation",
+          "enabled": false,
+          "description": "Reports incorrect bean references in the `value` parameter of the\n[@DependsOn](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/DependsOn.html)\nannotation.\n\n**Example:**\n\n\n      @Component\n      @DependsOn(\"unknown\")  // reports \"Cannot resolve bean 'unknown'\"\n      public class MyComponent {\n      }\n"
+        },
+        {
+          "shortName": "SpringCacheableAndCachePutInspection",
+          "displayName": "Incorrect usage of @CachePut and @Cacheable on the same method",
+          "enabled": true,
+          "description": "Reports [@CachePut](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/cache/annotation/CachePut.html)\nand [@Cacheable](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/cache/annotation/Cacheable.html)\nannotations declared on the same method.\nWhile `@Cacheable` causes the method to skip the execution using the cache, `@CachePut` forces the execution in order to update the cache. This leads to unexpected behavior and should be avoided, except in very specific cases when conditions in annotations exclude them from each other. Note also that such conditions should not rely on the result object (the `#result` variable) as these are validated upfront to confirm the exclusion."
+        },
+        {
+          "shortName": "SpringConfigurationProxyMethods",
+          "displayName": "@Configuration proxyMethods usage warnings",
+          "enabled": true,
+          "description": "Reports warnings on incorrectly used proxy methods. Spring Framework 5.2 has introduced an optimization for @Configuration class processing that can be enabled via an attribute @Configuration(proxyBeanMethods = false).   \n\nIf you disable\n\n    proxyBeanMethods\n\nthe proxy instances are no longer created and calling the method invokes it again (returning a new instance every time). As a result, you have no guarantee that you're actually injecting the corresponding bean in the context.   \n\n**Incorrect bean method call example:**   \n\n```\n@Configuration(proxyBeanMethods = false)\nclass TestConfiguration {\n  @Bean\n  public FirstBean firstBean() {\n    return new FirstBean();\n  }\n\n  @Bean\n  public SecondBean secondBean() {\n    return new SecondBean(firstBean()); // -> incorrect call\n  }\n}\n```\n\n<br />\n\n*** ** * ** ***\n\n**You can set\nproxyBeanMethods\nto true or rewrite the code as follows:**   \n\n```\n@Configuration(proxyBeanMethods = false)\nclass TestConfiguration {\n  @Bean\n  public FirstBean firstBean() {\n    return new FirstBean();\n  }\n\n  @Bean\n  public SecondBean secondBean(FirstBean someBean) { // -> correct injected instance\n    return new SecondBean(someBean);\n  }\n}\n```\n\n<br />\n\n*** ** * ** ***\n\n**Also, the inspection checks @Bean method calls in a class without the @Configuration stereotype (in \"bean lite mode\"):**   \n\n```\n@Component\nclass TestComponent {\n  @Bean\n  public FirstBean firstBean() {\n    return new FirstBean();\n  }\n\n  @Bean\n  public SecondBean secondBean() {\n    return new SecondBean(firstBean()); // -> incorrect call\n  }\n}\n```"
+        },
+        {
+          "shortName": "SpringTestingDirtiesContextInspection",
+          "displayName": "Invalid @DirtiesContext 'mode' configuration",
+          "enabled": true,
+          "description": "Reports incorrect 'mode' configuration in the\n[@DirtiesContext](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/annotation/DirtiesContext.html)\nannotation.\n\n**Example:**\n\n\n      @ContextConfiguration\n      @DirtiesContext(methodMode = MethodMode.AFTER_METHOD, // Setting the method mode on an annotated test class has no meaning. For class-level control, use classMode instead.\n                      hierarchyMode = DirtiesContext.HierarchyMode.CURRENT_LEVEL) // hierarchyMode should be used when the context is configured as part of a hierarchy via @ContextHierarchy\n      public class MyTest {\n        @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS, // Setting the class mode on an annotated test method has no meaning. For method-level control use methodMode instead..\n                         hierarchyMode = DirtiesContext.HierarchyMode.CURRENT_LEVEL) // hierarchyMode should be used when the context is configured as part of a hierarchy via @ContextHierarchy\n        public void testFoo() {...}\n      }\n"
+        },
+        {
+          "shortName": "SpringCacheNamesInspection",
+          "displayName": "Incorrect required cache names definition",
+          "enabled": true,
+          "description": "Reports incorrect `@Cache*` annotation names.\n\nAt least one cache name should be provided per cache operation: `@Cacheable(\"cache_name\")` or `@Cacheable(cacheNames =\"cache_name\")`.\n`@CacheConfig#cacheNames()` can be used for sharing common cache-related settings at the class level."
+        },
+        {
+          "shortName": "SpringJavaStaticMembersAutowiringInspection",
+          "displayName": "Incorrect Spring component autowiring or injection on a static class member",
+          "enabled": true,
+          "description": "Reports autowired and injected static methods/fields of Spring components.\n\n**Example:**\n\n```\n@Component\npublic class MyComponent {\n\t@Autowired\n\tstatic FooInterface foo;  // reports \"Don't autowire static members\"\n}\n```"
+        },
+        {
+          "shortName": "SpringJavaAutowiredMembersInspection",
+          "displayName": "Incorrect @Autowired member in a non-Spring component",
+          "enabled": true,
+          "description": "Reports injected or autowired fields/methods in classes that are not valid Spring beans:\n[@Component](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/stereotype/Component.html),\n[@Service](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/stereotype/Service.html),\nand so on.\n\n**Example:**\n\n\n    public class FooBeanClass {\n      @Autowired   // reports 'Autowired members must be defined in valid Spring beans: @Component, @Service, and so on'\n      ServiceBean bean;\n      }\n"
+        },
+        {
+          "shortName": "SpringImportResource",
+          "displayName": "Unresolved file references in @ImportResource locations",
+          "enabled": true,
+          "description": "Reports unresolved files and directories in `locations` attributes\nof [@ImportResource](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/ImportResource.html) annotations\nand the corresponding aliased attributes of the `@ImportResource` meta annotations.\n\n**Example:**\n\n\n      @Configuration\n      @ImportResource(locations = \"classpath:META-INF/unknown-context.xml\") // reports \"Cannot resolve file 'unknown-context.xml'\"\n      public class MyConfiguration {...}\n"
+        },
+        {
+          "shortName": "SpringTransactionalComponentInspection",
+          "displayName": "Invalid 'PlatformTransactionManager' declaration in @Transactional component",
+          "enabled": true,
+          "description": "Reports [PlatformTransactionManager](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/PlatformTransactionManager.html) classes that are not correctly defined in the application context for the current [@Transactional](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html) component."
+        },
+        {
+          "shortName": "SpringPropertySource",
+          "displayName": "Unresolved file references in @PropertySource and @TestPropertySource locations",
+          "enabled": true,
+          "description": "Reports unresolved files or directories in\n[@PropertySource](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/PropertySource.html)\nand [@TestPropertySource](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/context/TestPropertySource.html)\nannotations.\n\n**Example:**\n\n\n      @Configuration\n      @PropertySource(\"classpath:/com/mycompany/unknown.properties\") // reports \"Cannot resolve file unknown.properties\"\n      public class AppConfig {...}\n"
+        },
+        {
+          "shortName": "SpringProfileExpression",
+          "displayName": "Incorrectly configured @Profile expression",
+          "enabled": true,
+          "description": "Reports incorrect\n[@Profile](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/Profile.html)\nexpressions:\n\n* Spring profiles must not be empty\n* '\\&' and '\\|' operators must not be mixed without parentheses in Spring profile expressions\n\n**Examples:**\n\n\n      \n      @Configuration\n      @Profile(\"a & (b | c)\")\n      public class MyConfiguration {...}\n\n      \n      @Configuration\n      @Profile() // reports \"Profile expression must contain text\"\n      public class MyConfiguration {...}\n\n      \n      @Configuration\n      @Profile(\"a & b | c\") // reports \"Malformed profile expression\"\n      public class MyConfiguration {...}\n"
+        },
+        {
+          "shortName": "StatisticsCollectorNotRegistered",
+          "displayName": "Statistics collector not registered",
+          "enabled": false,
+          "description": "Reports statistics collectors not registered in `plugin.xml` descriptor.\n\n\nInternal inspection for IntelliJ IDEA project.\n\n\nQuick-fix adds necessary registration."
+        },
+        {
+          "shortName": "UseDPIAwareBorders",
+          "displayName": "Use DPI-aware borders",
+          "enabled": false,
+          "description": "Reports usages of `javax.swing.border.EmptyBorder`.\n\n\nThese are not DPI-aware and can result in UI layout problems.\n\n\nQuick-fix performs replacement with `JBUI.Borders.empty()`."
+        },
+        {
+          "shortName": "NonDefaultConstructor",
+          "displayName": "Non-default constructors for service and extension class",
+          "enabled": false,
+          "description": "Reports extension/service class having a non-default (empty) constructor.\n\n\nOther dependencies should be acquired when needed in corresponding methods only.\nConstructor having `Project` for extension/service on the corresponding level is allowed."
+        },
+        {
+          "shortName": "PresentationAnnotation",
+          "displayName": "Invalid icon path in @Presentation",
+          "enabled": false,
+          "description": "Reports invalid and deprecated value for `icon` attribute in `com.intellij.ide.presentation.Presentation` annotation."
+        },
+        {
+          "shortName": "UseVirtualFileEquals",
+          "displayName": "Use 'VirtualFile#equals(Object)'",
+          "enabled": false,
+          "description": "Reports comparing `VirtualFile` instances using `==`.\n\n\nReplace with `equals()` call."
+        },
+        {
+          "shortName": "InspectionUniqueToolbarId",
+          "displayName": "Specify toolbar id",
+          "enabled": false,
+          "description": "Reports passing non-unique `place` parameter for `ActionManager.createActionToolbar()`.\n\n\nSpecifying proper `place` is required to distinguish Action's usage in `update()/actionPerformed()` via `AnActionEvent.getPlace()`."
+        },
+        {
+          "shortName": "MissingRecentApi",
+          "displayName": "Usage of IntelliJ API not available in older IDEs",
+          "enabled": false,
+          "description": "Reports usages of IntelliJ Platform API introduced in a version *newer* than the one specified in `<idea-version>` `@since-build` in `plugin.xml`.\n\n\nUsing such API may lead to incompatibilities of the plugin with older IDE versions.\n\n\nTo avoid possible issues when running the plugin in older IDE versions, increase `since-build` accordingly,\nor remove usages of this API.\n\nConfigure the inspection:\nIf `<idea-version>` `@since/until-build` attributes are not specified in `plugin.xml`, set **Since** /**Until** explicitly."
+        },
+        {
+          "shortName": "HighlightVisitorInternal",
+          "displayName": "Good code is red",
+          "enabled": false,
+          "description": "Reports \"good code is red\" problems for Java/Groovy code.\n\n\nMust be run in batch mode, IDE internal mode must be enabled."
+        },
+        {
+          "shortName": "UElementAsPsi",
+          "displayName": "UElement as PsiElement usage",
+          "enabled": false,
+          "description": "Reports usage of UAST `UElement` as `PsiElement`.\n\n\nThe `PsiElement` obtained this way is ambiguous.\n\n\nTo obtain \"physical\" `PsiElement` use `UElementKt.getSourcePsiElement()`,\nfor `PsiElement` that \"emulates\" behaviour of Java-elements (`PsiClass`, `PsiMethod`, etc.)\nuse `UElementKt.getAsJavaPsiElement()`.\n\n\nSee [UAST - Unified Abstract Syntax Tree](https://plugins.jetbrains.com/docs/intellij/uast.html) in SDK Docs."
+        },
+        {
+          "shortName": "UsePrimitiveTypes",
+          "displayName": "Use 'PsiType#equals(Object)' with primitive types",
+          "enabled": false,
+          "description": "Reports comparing `PsiPrimitiveType` instances using `==`.\n\n\nPrimitive types should be compared with `equals` as Java 8 type annotations are also applicable for them.\n\n\nReplace with `equals()` call."
+        },
+        {
+          "shortName": "UseCouple",
+          "displayName": "Use Couple instead of Pair",
+          "enabled": false,
+          "description": "Reports usages of `Pair<T, T>` replaceable by `Couple<T>`.\n\n\nQuick-fix performs replacement."
+        },
+        {
+          "shortName": "SerializableCtor",
+          "displayName": "Non-default constructor in serializable class",
+          "enabled": false,
+          "description": "Reports non-default constructor in serializable classes.\n\n\nThe platform's `IonObjectSerializer` requires specifying `@PropertyMapping` explicitly.\n\n\nQuick-fix generates necessary `@PropertyMapping` annotation for the constructor."
+        },
+        {
+          "shortName": "ComponentNotRegistered",
+          "displayName": "Component/Action not registered",
+          "enabled": false,
+          "description": "Reports plugin components and actions that are not registered in a `plugin.xml` descriptor.\n\n\nThis eases developing new components when using the \"Create Class\" intention and helps keep track of potentially obsolete components.\n\n\nProvided quick-fix to register the component adds necessary registration in `plugin.xml` descriptor.\n\nConfigure the inspection:\n\n* Use the **Check Actions** option to turn off the check for Actions, as they may be intentionally created and registered dynamically.\n* Use the **Ignore non-public classes** option to ignore abstract and non-public classes."
+        },
+        {
+          "shortName": "UnresolvedPluginConfigReference",
+          "displayName": "Unresolved plugin configuration reference",
+          "enabled": false,
+          "description": "Reports unresolved references to plugin configuration elements.\n\n\nReferencing extension with an unknown `id` might result in errors at runtime.\n\n\nThe following extension points are supported:\n\n* `com.intellij.advancedSetting` in resource bundle `advanced.setting.*` key\n* `com.intellij.experimentalFeature` in `Experiments.isFeatureEnabled()/setFeatureEnabled()`\n* `com.intellij.notificationGroup` in `Notification` constructor and `NotificationGroupManager.getNotificationGroup()`\n* `com.intellij.registryKey` in `Registry` methods `key` parameter\n* `com.intellij.toolWindow` in resource bundle `toolwindow.stripe.*` key"
+        },
+        {
+          "shortName": "UseDPIAwareInsets",
+          "displayName": "Use DPI-aware insets",
+          "enabled": false,
+          "description": "Reports usages of `java.awt.Insets`.\n\n\nThese are not DPI-aware and can result in UI layout problems.\n\n\nQuick-fix performs replacement with `JBUI.insets()`."
+        },
+        {
+          "shortName": "UnregisteredNamedColor",
+          "displayName": "Unregistered named color",
+          "enabled": false,
+          "description": "Reports usages of `JBColor.namedColor()` with unregistered key.\n\n\nAll keys must be registered with corresponding metadata in `*.themeMetadata.json`.\n\n\nQuick-fix offers navigation to all known `*.themeMetadata.json` candidate files to add necessary entry.\n\n\nSee [Exposing Theme Metadata](https://plugins.jetbrains.com/docs/intellij/themes-metadata.html) in SDK Docs for more\ninformation."
+        },
+        {
+          "shortName": "InspectionUsingGrayColors",
+          "displayName": "Using new Color(a,a,a)",
+          "enabled": false,
+          "description": "Reports usages of `java.awt.Color` to create gray colors.\n\n\nQuick-fix **Convert to Gray** replaces it using `com.intellij.ui.Gray` constants instead.\n\n**Example:**\n`Color myGray = new Color(55, 55, 55);`\n\nAfter the quick-fix is applied:\n`Color myGray = Gray._55;`"
+        },
+        {
+          "shortName": "MissingAccessibleContext",
+          "displayName": "Accessible context is missing",
+          "enabled": false,
+          "description": "Reports Swing components that do not provide accessibility context.\n\n\nThis information is used by screen readers. Failing to provide it makes the component inaccessible for\nvisually impaired users.\n\n**Example:**\n\n      ListCellRenderer<String> renderer = (list, val, index, sel, cell) -> {\n        JPanel panel = new JPanel();\n        return panel;\n      };\n\n\nTo fix the problem, you should either call `setAccessibleName()` on the returned `JPanel`\nor override its `getAccessibleContext()` method.\n\n\nThe returned text should reflect the purpose\nof the component. For example, in the case of `ListCellRenderer`, this would be the text of the menu\nitem."
+        },
+        {
+          "shortName": "UseJBColor",
+          "displayName": "Use Darcula aware JBColor",
+          "enabled": false,
+          "description": "Reports usages of `java.awt.Color`.\n\n\nThese are not aware of \"dark\" themes (e.g., bundled \"Darcula\") and might result in bad looking UI.\n\n\nQuick-fix replaces usages with `JBColor`, which defines \"dark\" color variant."
+        },
+        {
+          "shortName": "QuickFixGetFamilyNameViolation",
+          "displayName": "QuickFix's getFamilyName() implementation must not depend on a specific context",
+          "enabled": false,
+          "description": "Reports `QuickFix#getFamilyName()` using contextual information.\n\n\nThis method must not use any non-static information."
+        },
+        {
+          "shortName": "UsePluginIdEquals",
+          "displayName": "Use 'PluginId#equals(Object)'",
+          "enabled": false,
+          "description": "Reports comparing `PluginId` instances using `==`.\n\n\nReplace with `equals()` call."
+        },
+        {
+          "shortName": "StatefulEp",
+          "displayName": "Stateful extension",
+          "enabled": false,
+          "description": "Reports extensions and quick-fixes holding potentially leaking state.\n\n\nKeeping references to `PsiElement`, `PsiReference`, or `Project` instances can result in memory leaks.\n\n\nIdeally, these should be stateless.\nFor quick-fix, see `LocalQuickFixOnPsiElement` as a convenient base class."
+        },
+        {
+          "shortName": "IncorrectParentDisposable",
+          "displayName": "Incorrect parentDisposable parameter",
+          "enabled": false,
+          "description": "Reports using `Application` or `Project` as a parent `Disposable` in plugin code.\n\n\nSuch usages will lead to plugins not being unloaded correctly.\nPlease see [Choosing a\nDisposable Parent](https://plugins.jetbrains.com/docs/intellij/disposers.html?from=IncorrectParentDisposable#choosing-a-disposable-parent) in SDK Docs."
+        },
+        {
+          "shortName": "PsiElementConcatenation",
+          "displayName": "Using PsiElement string representation to generate new expression is incorrect",
+          "enabled": false,
+          "description": "Reports direct usage of `PsiElement` and `PsiType` in strings.\n\n\nWhen building strings for `PsiJavaParserFacade.createExpressionFromText()` (or similar methods), `PsiElement.getText()` should be used\ninstead."
+        },
+        {
+          "shortName": "UnsafeReturnStatementVisitor",
+          "displayName": "Unsafe return statements visitor",
+          "enabled": false,
+          "description": "Reports unsafe use of `JavaRecursiveElementVisitor.visitReturnStatement()`.\n\n\nProcessing `PsiReturnStatement`s\neven if they belong to another `PsiClass` or `PsiLambdaExpression` is a bug in most cases.\n\n\nQuick-fix inserts necessary explicit `visitClass()/visitLambdaExpression()` method(s)."
+        },
+        {
+          "shortName": "UndesirableClassUsage",
+          "displayName": "Undesirable class usage",
+          "enabled": false,
+          "description": "Reports usages of undesirable classes (mostly Swing components).\n\n\nQuick-fix offers replacement with recommended IntelliJ Platform replacement."
+        },
+        {
+          "shortName": "LeakableMapKey",
+          "displayName": "Map key may leak",
+          "enabled": false,
+          "description": "Reports using `Language` or `FileType` as a map key in plugin code.\n\n\nSuch usages might lead to inability to unload the plugin properly.\n\n\nPlease consider using `String` as keys instead.\n\n\nSee [Dynamic\nPlugins](https://plugins.jetbrains.com/docs/intellij/dynamic-plugins.html) in SDK Docs for more information."
+        },
+        {
+          "shortName": "UnsafeVfsRecursion",
+          "displayName": "Unsafe VFS recursion",
+          "enabled": false,
+          "description": "Reports usage of `VirtualFile.getChildren()` inside recursive methods.\n\n\nThis may cause endless loops when iterating over cyclic symlinks.\nUse `VfsUtilCore.visitChildrenRecursively()` instead."
+        },
+        {
+          "shortName": "FileEqualsUsage",
+          "displayName": "File.equals() usage",
+          "enabled": false,
+          "description": "Reports usages of `java.io.File.equals()/hashCode()/compareTo()` methods.\n\n\nThese do not honor case-insensitivity on macOS.\n\n\nUse `com.intellij.openapi.util.io.FileUtil.filesEquals()/fileHashCode()/compareFiles()` methods instead."
+        }
+      ]
+    },
+    {
       "name": "Declaration redundancy",
       "inspections": [
         {
@@ -2576,341 +2911,6 @@
       ]
     },
     {
-      "name": "Code",
-      "inspections": [
-        {
-          "shortName": "SpringTestingSqlInspection",
-          "displayName": "Invalid @Sql and @SqlGroup configurations",
-          "enabled": true,
-          "description": "Reports unresolved file references in the `scripts` attributes of the\n[@Sql](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/context/jdbc/Sql.html)\nannotation and the corresponding aliased attributes of the `@Sql` meta annotations.\n\n**Example:**\n\n\n      @SqlGroup({\n         @Sql(\"not-found\"), // reports \"Cannot resolve file 'not-found\"\n         @Sql(\"found.sql\")\n      })\n      public class MyTestWithSqlData {...}\n"
-        },
-        {
-          "shortName": "SpringJavaAutowiredFieldsWarningInspection",
-          "displayName": "Non recommended 'field' injections",
-          "enabled": true,
-          "description": "Reports injected or autowired fields in Spring components.\n\nThe quick-fix suggests the recommended constructor-based dependency injection in beans\nand assertions for mandatory fields.\n\n**Example:**\n\n\n    class MyComponent {\n      @Inject MyCollaborator collaborator; // injected field\n\n      public void myBusinessMethod() {\n        collaborator.doSomething(); // throws NullPointerException\n      }\n    }\n\n<br />\n\nAfter applying the quick-fix:\n\n\n    class MyComponent {\n\n      private final MyCollaborator collaborator;\n\n      @Inject\n      public MyComponent(MyCollaborator collaborator) {\n        Assert.notNull(collaborator, \"MyCollaborator must not be null!\");\n        this.collaborator = collaborator;\n      }\n\n      public void myBusinessMethod() {\n        collaborator.doSomething(); // now this call is safe\n      }\n    }\n"
-        },
-        {
-          "shortName": "SpringContextConfigurationInspection",
-          "displayName": "Invalid @ContextConfiguration",
-          "enabled": true,
-          "description": "Reports incorrect Spring context configurations.\n\n* Unresolved files and directories in `locations` attributes and corresponding aliased attributes of `@ContextConfiguration` meta annotations\n* Missing default application context file\n\nFor more information, see [@ContextConfiguration](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/context/ContextConfiguration.html).\n\n**Example:**\n\n\n      @ContextConfiguration(locations = \"classpath:META-INF/unknown-context.xml\") // reports \"Cannot resolve file 'unknown-context.xml'\"\n      class MyTests {...}\n"
-        },
-        {
-          "shortName": "SpringRequiredAnnotationInspection",
-          "displayName": "@Required Spring bean property is not injected",
-          "enabled": true,
-          "description": "Reports `@Required` setter bean properties that are not injected or autowired.\n\n**Example:**\n\n\n    <beans>\n      <bean class=\"beans.MyComponent\" id=\"foo\"/>\n      // reports \"Required properties missing: 'port'\"\n    </beans>\n\n\n    *** ** * ** ***\n\n\n\n    public class MyComponent {\n       @Required\n       public void setPort(int port) // reports \"Required property 'port' is not injected\"\n       {...}\n    }\n"
-        },
-        {
-          "shortName": "SpringCacheableComponentsInspection",
-          "displayName": "Incorrectly configured 'caching' annotation",
-          "enabled": true,
-          "description": "Reports incorrect 'caching' annotations: `@Cacheable`, `@CacheEvict`, `@CachePut`, `@CacheConfig`, and so on.\n\n**Example:**\n\n\n    @org.springframework.stereotype.Component\n    public class MyCacheManager implements CacheManager{... }\n\n    public class MyConfiguration {\n       @Cacheable(value = \"a\",\n           cacheResolver =\"myCacheManager\") // reports \"Bean must be of 'org.springframework.cache.interceptor.CacheResolver' type\"\n       public String getCache(String isbn) { ...}\n\n       @Cacheable(value = \"abc\",\n       private String getAbc() // reports \"Caching annotations should be defined on public methods\"\n       {...}\n    }\n"
-        },
-        {
-          "shortName": "SpringComponentScan",
-          "displayName": "Invalid package in @ComponentScan or its meta annotation",
-          "enabled": true,
-          "description": "Reports unresolved packages in\n[@ComponentScan](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/ComponentScan.html)\nannotations and corresponding aliased attributes of `@ComponentScan` meta annotations.  \n\n**Example:**\n\n\n      @ComponentScan(basePackages = {\n         \"com.my.company\",\n         \"com.unknown\" // reports \"'Cannot resolve package 'unknown'\"\n      }) +\n      @Configuration +\n      public class MyConfiguration {}\n"
-        },
-        {
-          "shortName": "ScheduledMethodInspection",
-          "displayName": "Incorrect @Scheduled method signature",
-          "enabled": true,
-          "description": "Reports incorrect [@Scheduled](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/annotation/Scheduled.html) methods.\n\nAccording to Spring Documentation, methods to be scheduled must return void and must not expect any arguments.\nIf the method needs to interact with other objects from the Application Context,\nthey should be provided through dependency injection."
-        },
-        {
-          "shortName": "SpringLookupInjectionInspection",
-          "displayName": "Incorrectly referenced bean in @Lookup annotation of Spring component",
-          "enabled": true,
-          "description": "Reports incorrect bean references in the `value` parameter of the\n[@Lookup](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/annotation/Lookup.html)\nannotation.\n\n**Example:**\n\n\n      @Component public class FooBean {...}\n      @Component public class OtherBean {...}\n\n      @Component public class MyComponent {\n      @Lookup(\"fooBean\")\n      public FooBean fooBean() {...}\n\n      @Lookup(\"fooBean\") // reports \"Bean must be of 'OtherBean' type\"\n      public OtherBean otherBean() {...}\n\n      @Lookup(\"unknown\") // reports \"Cannot resolve bean 'unknown'\"\n      public OtherBean fooBean() {...}\n      }\n"
-        },
-        {
-          "shortName": "SpringTestingTransactionalInspection",
-          "displayName": "Invalid transactional lifecycle method declaration",
-          "enabled": true,
-          "description": "Reports invalid transactional lifecycle method declarations annotated with\n[@BeforeTransaction](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/context/transaction/BeforeTransaction.html)\nand [@AfterTransaction](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/context/transaction/AfterTransaction.html)\nin testing classes annotated as\n[@Transactional](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html).\n\nAnnotated methods must have no arguments and no return type.\n\n**Example:**\n\n\n      @ContextConfiguration\n      @Transactional\n      public class AbstractShowcaseTest {\n        @BeforeTransaction // Expected method return type is 'void'\n        public boolean setupData() {...}\n\n        @AfterTransaction // Wrong number of arguments\n        public void disposeData(boolean a) throws Exception {...}\n      }\n"
-        },
-        {
-          "shortName": "AsyncMethodInspection",
-          "displayName": "Incorrect @Async method signature",
-          "enabled": true,
-          "description": "Reports incorrect return types of [@Async](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/annotation/Async.html) methods.\n\nFor target method signatures, any parameter types are allowed.\nHowever, the return type should be either `void` or [Future](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Future.html).\nIt is also possible to return the more specific [ListenableFuture](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/concurrent/ListenableFuture.html) or [CompletableFuture](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html) types,\nwhich allow for richer interaction with the asynchronous task and for immediate composition with further processing steps."
-        },
-        {
-          "shortName": "SpringJavaInjectionPointsAutowiringInspection",
-          "displayName": "Incorrect injection point autowiring in Spring bean components",
-          "enabled": false,
-          "description": "Reports autowiring problems on injection points of Spring beans:\n\n* More than one bean of 'concrete' type\n* No beans of 'concrete' type\n* No bean with qualifier\n* Autowired method or constructor without parameters\n\n**Example:**\n\n```\npublic interface FooInterface {...}\n  @Component public class FooBean implements FooInterface {...}\n  @Component public class OtherBean implements FooInterface {...}\n\n@Component\npublic class MyComponent {\n\t@Autowired\n\tFooInterface foo;  // \"Could not autowire. There is more than one bean of 'FooInterface' type.\n                     // Beans: fooBean(FooBean.java), otherBean(OtherBean.java)\"\n}\n```"
-        },
-        {
-          "shortName": "SpringJavaConstructorAutowiringInspection",
-          "displayName": "Autowiring issues in a Spring bean class constructors",
-          "enabled": true,
-          "description": "Reports incorrect usages of `@Autowired` on Spring bean constructors:\nmore than one `@Autowired` constructor, no matching `@Autowired` constructor, and so on.\n\n**Example:**\n\n\n    @Component\n    public class MyComponent {\n    \t@Autowired\n    \tpublic MyComponent(BarBean bean) {...} // reports 'Only one @Autowired constructor is allowed'\n\n    \t@Autowired\n    \tpublic MyComponent(FooBean bean) {...} // reports 'Only one @Autowired constructor is allowed'\n    }\n\n    @Component\n    public class MyFactory {  // reports ' No matching @Autowired constructor'\n    \tpublic MyFactory(String str) {...}\n    \tpublic MyFactory(int count) {...}\n    }\n"
-        },
-        {
-          "shortName": "SpringEventListenerInspection",
-          "displayName": "Incorrectly configured  @EventListener methods ",
-          "enabled": true,
-          "description": "Reports incorrect\n[@EventListener](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/event/EventListener.html) methods.\n\n**Example:**\n\n\n      @Configuration @ComponentScan\n      open class Config\n\n      data class MyEvent(val string: String)\n\n      @Component\n      class LogComponent {\n        @EventListener // Method annotated with @EventListener must be public\n        private fun logCommands(commandName: MyEvent) {}\n\n        @EventListener // Method must have maximum one parameter\n        fun processCommand(commandName: MyEvent, text: String) {}\n      }\n"
-        },
-        {
-          "shortName": "ContextJavaBeanUnresolvedMethodsInspection",
-          "displayName": "Unknown init/destroy method in the @Bean annotation",
-          "enabled": true,
-          "description": "Reports unresolved method references on `initMethod` and `destroyMethod` parameters\nof the [@Bean](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/Bean.html) annotation.\n\n**Example:**\n\"Cannot resolve method\" will be reported on 'doInit' expression if MyBean class doesn't contain 'public void 'doInit'(){...}' method\n\n\n      public class MyBean {...}\n\n      @Component\n      public class MyComponent {\n         @Bean(initMethod=\"doInit\" )\n         public MyBean myBean() {...}\n      }\n\nIn this example, the inspection will report an unresolved method reference if `MyBean` doesn't define the `doInit()` method."
-        },
-        {
-          "shortName": "SpringCacheAnnotationsOnInterfaceInspection",
-          "displayName": "Cache* annotations defined on interfaces/interface methods",
-          "enabled": true,
-          "description": "Reports `@Cache*` annotations on interfaces.\n\nYou should annotate only concrete classes (and methods of concrete classes) with `@Cache*`.\nAnnotating an interface (or an interface method) with `@Cache*` requires using interface-based proxies.\nSince Java annotations are not inherited from interfaces, the proxying and weaving infrastructure will not be able to recognize the caching settings\nwhen using class-based proxies (`proxy-target-class=\"true\"`) or the weaving-based aspect (`mode=\"aspectj\"`).\nAs a result, the object will not be wrapped in a caching proxy."
-        },
-        {
-          "shortName": "SpringDependsOnUnresolvedBeanInspection",
-          "displayName": "Incorrectly referenced bean in @DependsOn annotation",
-          "enabled": false,
-          "description": "Reports incorrect bean references in the `value` parameter of the\n[@DependsOn](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/DependsOn.html)\nannotation.\n\n**Example:**\n\n\n      @Component\n      @DependsOn(\"unknown\")  // reports \"Cannot resolve bean 'unknown'\"\n      public class MyComponent {\n      }\n"
-        },
-        {
-          "shortName": "SpringCacheableAndCachePutInspection",
-          "displayName": "Incorrect usage of @CachePut and @Cacheable on the same method",
-          "enabled": true,
-          "description": "Reports [@CachePut](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/cache/annotation/CachePut.html)\nand [@Cacheable](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/cache/annotation/Cacheable.html)\nannotations declared on the same method.\nWhile `@Cacheable` causes the method to skip the execution using the cache, `@CachePut` forces the execution in order to update the cache. This leads to unexpected behavior and should be avoided, except in very specific cases when conditions in annotations exclude them from each other. Note also that such conditions should not rely on the result object (the `#result` variable) as these are validated upfront to confirm the exclusion."
-        },
-        {
-          "shortName": "SpringConfigurationProxyMethods",
-          "displayName": "@Configuration proxyMethods usage warnings",
-          "enabled": true,
-          "description": "Reports warnings on incorrectly used proxy methods. Spring Framework 5.2 has introduced an optimization for @Configuration class processing that can be enabled via an attribute @Configuration(proxyBeanMethods = false).   \n\nIf you disable\n\n    proxyBeanMethods\n\nthe proxy instances are no longer created and calling the method invokes it again (returning a new instance every time). As a result, you have no guarantee that you're actually injecting the corresponding bean in the context.   \n\n**Incorrect bean method call example:**   \n\n```\n@Configuration(proxyBeanMethods = false)\nclass TestConfiguration {\n  @Bean\n  public FirstBean firstBean() {\n    return new FirstBean();\n  }\n\n  @Bean\n  public SecondBean secondBean() {\n    return new SecondBean(firstBean()); // -> incorrect call\n  }\n}\n```\n\n<br />\n\n*** ** * ** ***\n\n**You can set\nproxyBeanMethods\nto true or rewrite the code as follows:**   \n\n```\n@Configuration(proxyBeanMethods = false)\nclass TestConfiguration {\n  @Bean\n  public FirstBean firstBean() {\n    return new FirstBean();\n  }\n\n  @Bean\n  public SecondBean secondBean(FirstBean someBean) { // -> correct injected instance\n    return new SecondBean(someBean);\n  }\n}\n```\n\n<br />\n\n*** ** * ** ***\n\n**Also, the inspection checks @Bean method calls in a class without the @Configuration stereotype (in \"bean lite mode\"):**   \n\n```\n@Component\nclass TestComponent {\n  @Bean\n  public FirstBean firstBean() {\n    return new FirstBean();\n  }\n\n  @Bean\n  public SecondBean secondBean() {\n    return new SecondBean(firstBean()); // -> incorrect call\n  }\n}\n```"
-        },
-        {
-          "shortName": "SpringTestingDirtiesContextInspection",
-          "displayName": "Invalid @DirtiesContext 'mode' configuration",
-          "enabled": true,
-          "description": "Reports incorrect 'mode' configuration in the\n[@DirtiesContext](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/annotation/DirtiesContext.html)\nannotation.\n\n**Example:**\n\n\n      @ContextConfiguration\n      @DirtiesContext(methodMode = MethodMode.AFTER_METHOD, // Setting the method mode on an annotated test class has no meaning. For class-level control, use classMode instead.\n                      hierarchyMode = DirtiesContext.HierarchyMode.CURRENT_LEVEL) // hierarchyMode should be used when the context is configured as part of a hierarchy via @ContextHierarchy\n      public class MyTest {\n        @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS, // Setting the class mode on an annotated test method has no meaning. For method-level control use methodMode instead..\n                         hierarchyMode = DirtiesContext.HierarchyMode.CURRENT_LEVEL) // hierarchyMode should be used when the context is configured as part of a hierarchy via @ContextHierarchy\n        public void testFoo() {...}\n      }\n"
-        },
-        {
-          "shortName": "SpringCacheNamesInspection",
-          "displayName": "Incorrect required cache names definition",
-          "enabled": true,
-          "description": "Reports incorrect `@Cache*` annotation names.\n\nAt least one cache name should be provided per cache operation: `@Cacheable(\"cache_name\")` or `@Cacheable(cacheNames =\"cache_name\")`.\n`@CacheConfig#cacheNames()` can be used for sharing common cache-related settings at the class level."
-        },
-        {
-          "shortName": "SpringJavaStaticMembersAutowiringInspection",
-          "displayName": "Incorrect Spring component autowiring or injection on a static class member",
-          "enabled": true,
-          "description": "Reports autowired and injected static methods/fields of Spring components.\n\n**Example:**\n\n```\n@Component\npublic class MyComponent {\n\t@Autowired\n\tstatic FooInterface foo;  // reports \"Don't autowire static members\"\n}\n```"
-        },
-        {
-          "shortName": "SpringJavaAutowiredMembersInspection",
-          "displayName": "Incorrect @Autowired member in a non-Spring component",
-          "enabled": true,
-          "description": "Reports injected or autowired fields/methods in classes that are not valid Spring beans:\n[@Component](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/stereotype/Component.html),\n[@Service](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/stereotype/Service.html),\nand so on.\n\n**Example:**\n\n\n    public class FooBeanClass {\n      @Autowired   // reports 'Autowired members must be defined in valid Spring beans: @Component, @Service, and so on'\n      ServiceBean bean;\n      }\n"
-        },
-        {
-          "shortName": "SpringImportResource",
-          "displayName": "Unresolved file references in @ImportResource locations",
-          "enabled": true,
-          "description": "Reports unresolved files and directories in `locations` attributes\nof [@ImportResource](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/ImportResource.html) annotations\nand the corresponding aliased attributes of the `@ImportResource` meta annotations.\n\n**Example:**\n\n\n      @Configuration\n      @ImportResource(locations = \"classpath:META-INF/unknown-context.xml\") // reports \"Cannot resolve file 'unknown-context.xml'\"\n      public class MyConfiguration {...}\n"
-        },
-        {
-          "shortName": "SpringTransactionalComponentInspection",
-          "displayName": "Invalid 'PlatformTransactionManager' declaration in @Transactional component",
-          "enabled": true,
-          "description": "Reports [PlatformTransactionManager](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/PlatformTransactionManager.html) classes that are not correctly defined in the application context for the current [@Transactional](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html) component."
-        },
-        {
-          "shortName": "SpringPropertySource",
-          "displayName": "Unresolved file references in @PropertySource and @TestPropertySource locations",
-          "enabled": true,
-          "description": "Reports unresolved files or directories in\n[@PropertySource](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/PropertySource.html)\nand [@TestPropertySource](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/context/TestPropertySource.html)\nannotations.\n\n**Example:**\n\n\n      @Configuration\n      @PropertySource(\"classpath:/com/mycompany/unknown.properties\") // reports \"Cannot resolve file unknown.properties\"\n      public class AppConfig {...}\n"
-        },
-        {
-          "shortName": "SpringProfileExpression",
-          "displayName": "Incorrectly configured @Profile expression",
-          "enabled": true,
-          "description": "Reports incorrect\n[@Profile](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/Profile.html)\nexpressions:\n\n* Spring profiles must not be empty\n* '\\&' and '\\|' operators must not be mixed without parentheses in Spring profile expressions\n\n**Examples:**\n\n\n      \n      @Configuration\n      @Profile(\"a & (b | c)\")\n      public class MyConfiguration {...}\n\n      \n      @Configuration\n      @Profile() // reports \"Profile expression must contain text\"\n      public class MyConfiguration {...}\n\n      \n      @Configuration\n      @Profile(\"a & b | c\") // reports \"Malformed profile expression\"\n      public class MyConfiguration {...}\n"
-        },
-        {
-          "shortName": "StatisticsCollectorNotRegistered",
-          "displayName": "Statistics collector not registered",
-          "enabled": false,
-          "description": "Reports statistics collectors not registered in `plugin.xml` descriptor.\n\n\nInternal inspection for IntelliJ IDEA project.\n\n\nQuick-fix adds necessary registration."
-        },
-        {
-          "shortName": "UseDPIAwareBorders",
-          "displayName": "Use DPI-aware borders",
-          "enabled": false,
-          "description": "Reports usages of `javax.swing.border.EmptyBorder`.\n\n\nThese are not DPI-aware and can result in UI layout problems.\n\n\nQuick-fix performs replacement with `JBUI.Borders.empty()`."
-        },
-        {
-          "shortName": "NonDefaultConstructor",
-          "displayName": "Non-default constructors for service and extension class",
-          "enabled": false,
-          "description": "Reports extension/service class having a non-default (empty) constructor.\n\n\nOther dependencies should be acquired when needed in corresponding methods only.\nConstructor having `Project` for extension/service on the corresponding level is allowed."
-        },
-        {
-          "shortName": "PresentationAnnotation",
-          "displayName": "Invalid icon path in @Presentation",
-          "enabled": false,
-          "description": "Reports invalid and deprecated value for `icon` attribute in `com.intellij.ide.presentation.Presentation` annotation."
-        },
-        {
-          "shortName": "UseVirtualFileEquals",
-          "displayName": "Use 'VirtualFile#equals(Object)'",
-          "enabled": false,
-          "description": "Reports comparing `VirtualFile` instances using `==`.\n\n\nReplace with `equals()` call."
-        },
-        {
-          "shortName": "InspectionUniqueToolbarId",
-          "displayName": "Specify toolbar id",
-          "enabled": false,
-          "description": "Reports passing non-unique `place` parameter for `ActionManager.createActionToolbar()`.\n\n\nSpecifying proper `place` is required to distinguish Action's usage in `update()/actionPerformed()` via `AnActionEvent.getPlace()`."
-        },
-        {
-          "shortName": "MissingRecentApi",
-          "displayName": "Usage of IntelliJ API not available in older IDEs",
-          "enabled": false,
-          "description": "Reports usages of IntelliJ Platform API introduced in a version *newer* than the one specified in `<idea-version>` `@since-build` in `plugin.xml`.\n\n\nUsing such API may lead to incompatibilities of the plugin with older IDE versions.\n\n\nTo avoid possible issues when running the plugin in older IDE versions, increase `since-build` accordingly,\nor remove usages of this API.\n\nConfigure the inspection:\nIf `<idea-version>` `@since/until-build` attributes are not specified in `plugin.xml`, set **Since** /**Until** explicitly."
-        },
-        {
-          "shortName": "HighlightVisitorInternal",
-          "displayName": "Good code is red",
-          "enabled": false,
-          "description": "Reports \"good code is red\" problems for Java/Groovy code.\n\n\nMust be run in batch mode, IDE internal mode must be enabled."
-        },
-        {
-          "shortName": "UElementAsPsi",
-          "displayName": "UElement as PsiElement usage",
-          "enabled": false,
-          "description": "Reports usage of UAST `UElement` as `PsiElement`.\n\n\nThe `PsiElement` obtained this way is ambiguous.\n\n\nTo obtain \"physical\" `PsiElement` use `UElementKt.getSourcePsiElement()`,\nfor `PsiElement` that \"emulates\" behaviour of Java-elements (`PsiClass`, `PsiMethod`, etc.)\nuse `UElementKt.getAsJavaPsiElement()`.\n\n\nSee [UAST - Unified Abstract Syntax Tree](https://plugins.jetbrains.com/docs/intellij/uast.html) in SDK Docs."
-        },
-        {
-          "shortName": "UsePrimitiveTypes",
-          "displayName": "Use 'PsiType#equals(Object)' with primitive types",
-          "enabled": false,
-          "description": "Reports comparing `PsiPrimitiveType` instances using `==`.\n\n\nPrimitive types should be compared with `equals` as Java 8 type annotations are also applicable for them.\n\n\nReplace with `equals()` call."
-        },
-        {
-          "shortName": "UseCouple",
-          "displayName": "Use Couple instead of Pair",
-          "enabled": false,
-          "description": "Reports usages of `Pair<T, T>` replaceable by `Couple<T>`.\n\n\nQuick-fix performs replacement."
-        },
-        {
-          "shortName": "SerializableCtor",
-          "displayName": "Non-default constructor in serializable class",
-          "enabled": false,
-          "description": "Reports non-default constructor in serializable classes.\n\n\nThe platform's `IonObjectSerializer` requires specifying `@PropertyMapping` explicitly.\n\n\nQuick-fix generates necessary `@PropertyMapping` annotation for the constructor."
-        },
-        {
-          "shortName": "ComponentNotRegistered",
-          "displayName": "Component/Action not registered",
-          "enabled": false,
-          "description": "Reports plugin components and actions that are not registered in a `plugin.xml` descriptor.\n\n\nThis eases developing new components when using the \"Create Class\" intention and helps keep track of potentially obsolete components.\n\n\nProvided quick-fix to register the component adds necessary registration in `plugin.xml` descriptor.\n\nConfigure the inspection:\n\n* Use the **Check Actions** option to turn off the check for Actions, as they may be intentionally created and registered dynamically.\n* Use the **Ignore non-public classes** option to ignore abstract and non-public classes."
-        },
-        {
-          "shortName": "UnresolvedPluginConfigReference",
-          "displayName": "Unresolved plugin configuration reference",
-          "enabled": false,
-          "description": "Reports unresolved references to plugin configuration elements.\n\n\nReferencing extension with an unknown `id` might result in errors at runtime.\n\n\nThe following extension points are supported:\n\n* `com.intellij.advancedSetting` in resource bundle `advanced.setting.*` key\n* `com.intellij.experimentalFeature` in `Experiments.isFeatureEnabled()/setFeatureEnabled()`\n* `com.intellij.notificationGroup` in `Notification` constructor and `NotificationGroupManager.getNotificationGroup()`\n* `com.intellij.registryKey` in `Registry` methods `key` parameter\n* `com.intellij.toolWindow` in resource bundle `toolwindow.stripe.*` key"
-        },
-        {
-          "shortName": "UseDPIAwareInsets",
-          "displayName": "Use DPI-aware insets",
-          "enabled": false,
-          "description": "Reports usages of `java.awt.Insets`.\n\n\nThese are not DPI-aware and can result in UI layout problems.\n\n\nQuick-fix performs replacement with `JBUI.insets()`."
-        },
-        {
-          "shortName": "UnregisteredNamedColor",
-          "displayName": "Unregistered named color",
-          "enabled": false,
-          "description": "Reports usages of `JBColor.namedColor()` with unregistered key.\n\n\nAll keys must be registered with corresponding metadata in `*.themeMetadata.json`.\n\n\nQuick-fix offers navigation to all known `*.themeMetadata.json` candidate files to add necessary entry.\n\n\nSee [Exposing Theme Metadata](https://plugins.jetbrains.com/docs/intellij/themes-metadata.html) in SDK Docs for more\ninformation."
-        },
-        {
-          "shortName": "InspectionUsingGrayColors",
-          "displayName": "Using new Color(a,a,a)",
-          "enabled": false,
-          "description": "Reports usages of `java.awt.Color` to create gray colors.\n\n\nQuick-fix **Convert to Gray** replaces it using `com.intellij.ui.Gray` constants instead.\n\n**Example:**\n`Color myGray = new Color(55, 55, 55);`\n\nAfter the quick-fix is applied:\n`Color myGray = Gray._55;`"
-        },
-        {
-          "shortName": "MissingAccessibleContext",
-          "displayName": "Accessible context is missing",
-          "enabled": false,
-          "description": "Reports Swing components that do not provide accessibility context.\n\n\nThis information is used by screen readers. Failing to provide it makes the component inaccessible for\nvisually impaired users.\n\n**Example:**\n\n      ListCellRenderer<String> renderer = (list, val, index, sel, cell) -> {\n        JPanel panel = new JPanel();\n        return panel;\n      };\n\n\nTo fix the problem, you should either call `setAccessibleName()` on the returned `JPanel`\nor override its `getAccessibleContext()` method.\n\n\nThe returned text should reflect the purpose\nof the component. For example, in the case of `ListCellRenderer`, this would be the text of the menu\nitem."
-        },
-        {
-          "shortName": "UseJBColor",
-          "displayName": "Use Darcula aware JBColor",
-          "enabled": false,
-          "description": "Reports usages of `java.awt.Color`.\n\n\nThese are not aware of \"dark\" themes (e.g., bundled \"Darcula\") and might result in bad looking UI.\n\n\nQuick-fix replaces usages with `JBColor`, which defines \"dark\" color variant."
-        },
-        {
-          "shortName": "QuickFixGetFamilyNameViolation",
-          "displayName": "QuickFix's getFamilyName() implementation must not depend on a specific context",
-          "enabled": false,
-          "description": "Reports `QuickFix#getFamilyName()` using contextual information.\n\n\nThis method must not use any non-static information."
-        },
-        {
-          "shortName": "UsePluginIdEquals",
-          "displayName": "Use 'PluginId#equals(Object)'",
-          "enabled": false,
-          "description": "Reports comparing `PluginId` instances using `==`.\n\n\nReplace with `equals()` call."
-        },
-        {
-          "shortName": "StatefulEp",
-          "displayName": "Stateful extension",
-          "enabled": false,
-          "description": "Reports extensions and quick-fixes holding potentially leaking state.\n\n\nKeeping references to `PsiElement`, `PsiReference`, or `Project` instances can result in memory leaks.\n\n\nIdeally, these should be stateless.\nFor quick-fix, see `LocalQuickFixOnPsiElement` as a convenient base class."
-        },
-        {
-          "shortName": "IncorrectParentDisposable",
-          "displayName": "Incorrect parentDisposable parameter",
-          "enabled": false,
-          "description": "Reports using `Application` or `Project` as a parent `Disposable` in plugin code.\n\n\nSuch usages will lead to plugins not being unloaded correctly.\nPlease see [Choosing a\nDisposable Parent](https://plugins.jetbrains.com/docs/intellij/disposers.html?from=IncorrectParentDisposable#choosing-a-disposable-parent) in SDK Docs."
-        },
-        {
-          "shortName": "PsiElementConcatenation",
-          "displayName": "Using PsiElement string representation to generate new expression is incorrect",
-          "enabled": false,
-          "description": "Reports direct usage of `PsiElement` and `PsiType` in strings.\n\n\nWhen building strings for `PsiJavaParserFacade.createExpressionFromText()` (or similar methods), `PsiElement.getText()` should be used\ninstead."
-        },
-        {
-          "shortName": "UnsafeReturnStatementVisitor",
-          "displayName": "Unsafe return statements visitor",
-          "enabled": false,
-          "description": "Reports unsafe use of `JavaRecursiveElementVisitor.visitReturnStatement()`.\n\n\nProcessing `PsiReturnStatement`s\neven if they belong to another `PsiClass` or `PsiLambdaExpression` is a bug in most cases.\n\n\nQuick-fix inserts necessary explicit `visitClass()/visitLambdaExpression()` method(s)."
-        },
-        {
-          "shortName": "UndesirableClassUsage",
-          "displayName": "Undesirable class usage",
-          "enabled": false,
-          "description": "Reports usages of undesirable classes (mostly Swing components).\n\n\nQuick-fix offers replacement with recommended IntelliJ Platform replacement."
-        },
-        {
-          "shortName": "LeakableMapKey",
-          "displayName": "Map key may leak",
-          "enabled": false,
-          "description": "Reports using `Language` or `FileType` as a map key in plugin code.\n\n\nSuch usages might lead to inability to unload the plugin properly.\n\n\nPlease consider using `String` as keys instead.\n\n\nSee [Dynamic\nPlugins](https://plugins.jetbrains.com/docs/intellij/dynamic-plugins.html) in SDK Docs for more information."
-        },
-        {
-          "shortName": "UnsafeVfsRecursion",
-          "displayName": "Unsafe VFS recursion",
-          "enabled": false,
-          "description": "Reports usage of `VirtualFile.getChildren()` inside recursive methods.\n\n\nThis may cause endless loops when iterating over cyclic symlinks.\nUse `VfsUtilCore.visitChildrenRecursively()` instead."
-        },
-        {
-          "shortName": "FileEqualsUsage",
-          "displayName": "File.equals() usage",
-          "enabled": false,
-          "description": "Reports usages of `java.io.File.equals()/hashCode()/compareTo()` methods.\n\n\nThese do not honor case-insensitivity on macOS.\n\n\nUse `com.intellij.openapi.util.io.FileUtil.filesEquals()/fileHashCode()/compareFiles()` methods instead."
-        }
-      ]
-    },
-    {
       "name": "Probable bugs",
       "inspections": [
         {
@@ -2932,16 +2932,16 @@
           "description": "Reports calls to `StringBuffer` and `StringBuilder` constructors with `char` as the argument. In this case, `char` is silently cast to an integer and interpreted as the initial capacity of the buffer.\n\n**Example:**\n\n\n      new StringBuilder('(').append(\"1\").append(')');\n\nAfter the quick-fix is applied:\n\n\n      new StringBuilder(\"(\").append(\"1\").append(')');\n"
         },
         {
-          "shortName": "ResultOfObjectAllocationIgnored",
-          "displayName": "Result of object allocation ignored",
-          "enabled": false,
-          "description": "Reports object allocations where the allocated object is ignored and neither assigned to a variable nor used in another way.\n\n\nSuch allocation expressions are legal in Java, but are usually either unintended, or\nevidence of a very odd object initialization strategy.\n\n\nUse the options to list classes whose allocations should be ignored by this inspection."
-        },
-        {
           "shortName": "ClassGetClass",
           "displayName": "Suspicious 'Class.getClass()' call",
           "enabled": true,
           "description": "Reports `getClass()` methods that are called on a `java.lang.Class` instance.\n\nThis is usually a mistake as the result is always equivalent to `Class.class`.\nIf it's a mistake, then it's better to remove the `getClass()` call and use the qualifier directly.\nIf the behavior is intended, then it's better to write `Class.class` explicitly to avoid confusion.\n\nExample:\n\n\n      void test(Class<?> clazz) {\n        String name = clazz.getClass().getName();\n      }\n\nAfter one of the possible quick-fixes is applied:\n\n\n      void test(Class<?> clazz) {\n        String name = clazz.getName();\n      }\n\nNew in 2018.2"
+        },
+        {
+          "shortName": "ResultOfObjectAllocationIgnored",
+          "displayName": "Result of object allocation ignored",
+          "enabled": false,
+          "description": "Reports object allocations where the allocated object is ignored and neither assigned to a variable nor used in another way.\n\n\nSuch allocation expressions are legal in Java, but are usually either unintended, or\nevidence of a very odd object initialization strategy.\n\n\nUse the options to list classes whose allocations should be ignored by this inspection."
         },
         {
           "shortName": "MismatchedStringBuilderQueryUpdate",
@@ -3412,16 +3412,16 @@
           "description": "Reports annotations used on record components that have no effect.\n\nThis can happen in two cases:\n\n* The reported annotation has the METHOD target, but the corresponding accessor is explicitly defined.\n* The reported annotation has the PARAMETER target, but the canonical constructor is explicitly defined.\n\nExample:\n\n\n    @Target(ElementType.METHOD)\n    @interface A { }\n      \n    // The annotation will not appear in bytecode at all,\n    // as it should be propagated to the accessor but accessor is explicitly defined \n    record R(@A int x) {\n      public int x() { return x; }\n    }\n\nNew in 2021.1"
         },
         {
-          "shortName": "SuspiciousDateFormat",
-          "displayName": "Suspicious date format pattern",
-          "enabled": true,
-          "description": "Reports date format patterns that are likely used by mistake.\n\nThe following patterns are reported:\n\n* Uppercase \"Y\", unless \"w\" appears nearby. It stands for \"Week year\" that is almost always the same as normal \"Year\" (lowercase \"y\" pattern), but may point to the next year at the end of December.\n* Uppercase \"M\" (month) close to \"H\", \"K\", \"h\", or \"k\" (hour). It's likely that a lowercase \"m\" (minute) was intended.\n* Lowercase \"m\" (minute) close to \"y\" (year) or \"d\" (day in month). It's likely that an uppercase \"M\" (month) was intended.\n* Uppercase \"D\" (day in year) close to \"M\", or \"L\" (month). It's likely that a lowercase \"d\" (day in month) was intended.\n* Uppercase \"S\" (milliseconds) close to \"m\" (minutes). It's likely that a lowercase \"s\" (seconds) was intended.\n\n\nExamples:  \n\n`new SimpleDateFormat(\"YYYY-MM-dd\")`: likely `\"yyyy-MM-dd\"` was intended.  \n\n`new SimpleDateFormat(\"yyyy-MM-DD\")`: likely `\"yyyy-MM-dd\"` was intended.  \n\n`new SimpleDateFormat(\"HH:MM\")`: likely `\"HH:mm\"` was intended.\n\nNew in 2020.1"
-        },
-        {
           "shortName": "MagicConstant",
           "displayName": "Magic Constant",
           "enabled": true,
           "description": "Reports expressions that can be replaced with \"magic\" constants.\n\nExample 1:\n\n\n      // Bare literal \"2\" is used, warning:\n      Font font = new Font(\"Arial\", 2)\n\nExample 2:\n\n\n      // Predefined constant is used, good:\n      Font font = new Font(\"Arial\", Font.ITALIC)\n\n\nWhen possible, the quick-fix inserts an appropriate predefined constant.\n\n\nThe behavior of this inspection is controlled by `org.intellij.lang.annotations.MagicConstant` annotation.\nSome standard Java library methods are pre-annotated, but you can use this annotation in your code as well."
+        },
+        {
+          "shortName": "SuspiciousDateFormat",
+          "displayName": "Suspicious date format pattern",
+          "enabled": true,
+          "description": "Reports date format patterns that are likely used by mistake.\n\nThe following patterns are reported:\n\n* Uppercase \"Y\", unless \"w\" appears nearby. It stands for \"Week year\" that is almost always the same as normal \"Year\" (lowercase \"y\" pattern), but may point to the next year at the end of December.\n* Uppercase \"M\" (month) close to \"H\", \"K\", \"h\", or \"k\" (hour). It's likely that a lowercase \"m\" (minute) was intended.\n* Lowercase \"m\" (minute) close to \"y\" (year) or \"d\" (day in month). It's likely that an uppercase \"M\" (month) was intended.\n* Uppercase \"D\" (day in year) close to \"M\", or \"L\" (month). It's likely that a lowercase \"d\" (day in month) was intended.\n* Uppercase \"S\" (milliseconds) close to \"m\" (minutes). It's likely that a lowercase \"s\" (seconds) was intended.\n\n\nExamples:  \n\n`new SimpleDateFormat(\"YYYY-MM-dd\")`: likely `\"yyyy-MM-dd\"` was intended.  \n\n`new SimpleDateFormat(\"yyyy-MM-DD\")`: likely `\"yyyy-MM-dd\"` was intended.  \n\n`new SimpleDateFormat(\"HH:MM\")`: likely `\"HH:mm\"` was intended.\n\nNew in 2020.1"
         },
         {
           "shortName": "MismatchedCollectionQueryUpdate",
@@ -3454,16 +3454,16 @@
           "description": "Reports usages of the non-short-circuit forms of boolean 'and' and 'or' (`&` and `|`). Although the non-short-circuit versions are occasionally useful, in most cases the short-circuit forms (`&&` and `||`) are intended and such unintentional usages may lead to subtle bugs.\n\n\nA quick-fix is suggested to use the short-circuit versions.\n\n**Example:**\n\n\n      void foo(boolean x, boolean y) {\n        if (x | y) { /**/ }\n      }\n\nAfter the quick-fix is applied:\n\n\n      void foo(boolean x, boolean y) {\n        if (x || y) { /**/ }\n      }\n"
         },
         {
-          "shortName": "EqualsAndHashcode",
-          "displayName": "'equals()' and 'hashCode()' not paired",
-          "enabled": true,
-          "description": "Reports classes that override the `equals()` method but do not override the `hashCode()` method or vice versa, which can potentially lead to problems when the class is added to a `Collection` or a `HashMap`.\n\nThe quick-fix generates the default implementation for an absent method.\n\nExample:\n\n\n    class StringHolder {\n      String s;\n\n      @Override public int hashCode() {\n        return s != null ? s.hashCode() : 0;\n      }\n    }\n\nAfter the quick-fix is applied:\n\n\n    class StringHolder {\n      String s;\n\n      @Override public int hashCode() {\n        return s != null ? s.hashCode() : 0;\n      }\n\n      @Override\n      public boolean equals(Object o) {\n        if (this == o) return true;\n        if (!(o instanceof StringHolder)) return false;\n\n        StringHolder holder = (StringHolder)o;\n\n        if (s != null ? !s.equals(holder.s) : holder.s != null) return false;\n\n        return true;\n      }\n    }\n"
-        },
-        {
           "shortName": "IteratorHasNextCallsIteratorNext",
           "displayName": "'Iterator.hasNext()' which calls 'next()'",
           "enabled": true,
           "description": "Reports implementations of `Iterator.hasNext()` or `ListIterator.hasPrevious()` that call `Iterator.next()` or `ListIterator.previous()` on the iterator instance. Such calls are almost certainly an error, as methods like `hasNext()` should not modify the iterators state, while `next()` should.\n\n**Example:**\n\n\n      class MyIterator implements Iterator<Integer> {\n        public boolean hasNext() {\n          return next() != null;\n        }\n      }\n"
+        },
+        {
+          "shortName": "EqualsAndHashcode",
+          "displayName": "'equals()' and 'hashCode()' not paired",
+          "enabled": true,
+          "description": "Reports classes that override the `equals()` method but do not override the `hashCode()` method or vice versa, which can potentially lead to problems when the class is added to a `Collection` or a `HashMap`.\n\nThe quick-fix generates the default implementation for an absent method.\n\nExample:\n\n\n    class StringHolder {\n      String s;\n\n      @Override public int hashCode() {\n        return s != null ? s.hashCode() : 0;\n      }\n    }\n\nAfter the quick-fix is applied:\n\n\n    class StringHolder {\n      String s;\n\n      @Override public int hashCode() {\n        return s != null ? s.hashCode() : 0;\n      }\n\n      @Override\n      public boolean equals(Object o) {\n        if (this == o) return true;\n        if (!(o instanceof StringHolder)) return false;\n\n        StringHolder holder = (StringHolder)o;\n\n        if (s != null ? !s.equals(holder.s) : holder.s != null) return false;\n\n        return true;\n      }\n    }\n"
         },
         {
           "shortName": "SuspiciousArrayMethodCall",
@@ -3887,149 +3887,6 @@
       ]
     },
     {
-      "name": "Serialization issues",
-      "inspections": [
-        {
-          "shortName": "ComparatorNotSerializable",
-          "displayName": "Comparator class not declared Serializable",
-          "enabled": false,
-          "description": "Reports classes that implement `java.lang.Comparator`, but do not implement `java.io.Serializable`.\n\n\nIf a non-serializable comparator is used to construct an ordered collection such\nas a `java.util.TreeMap` or `java.util.TreeSet`, then the\ncollection will also be non-serializable. This can result in unexpected and\ndifficult-to-diagnose bugs.\n\n\nSince subclasses of `java.lang.Comparator` are often stateless,\nsimply marking them serializable is a small cost to avoid such issues.\n\n**Example:**\n\n\n      class Foo implements Comparator { // warning\n          @Override\n          public int compare(Object o1, Object o2) {\n              /* ... */\n          }\n      }\n\nAfter the quick-fix is applied:\n\n\n      class Foo implements Comparator, Serializable { // no warning here\n          @Override\n          public int compare(Object o1, Object o2) {\n              /* ... */\n          }\n      }\n"
-        },
-        {
-          "shortName": "SerializableStoresNonSerializable",
-          "displayName": "'Serializable' object implicitly stores non-'Serializable' object",
-          "enabled": false,
-          "description": "Reports any references to local non-`Serializable` variables outside `Serializable` lambdas, local and anonymous classes.\n\n\nWhen a local variable is referenced from an anonymous class, its value\nis stored in an implicit field of that class. The same happens\nfor local classes and lambdas. If the variable is of a\nnon-`Serializable` type, serialization will fail.\n\n**Example:**\n\n\n      interface A extends Serializable {\n          abstract void foo();\n      }\n      class B {}\n      class C {\n          void foo() {\n              B b = new B();\n              A a = new A() {\n                  @Override\n                  public void foo() {\n                      System.out.println(b); // warning\n                  }\n              };\n          }\n      }\n"
-        },
-        {
-          "shortName": "ExternalizableWithSerializationMethods",
-          "displayName": "Externalizable class with 'readObject()' or 'writeObject()'",
-          "enabled": false,
-          "description": "Reports `Externalizable` classes that define `readObject()` or `writeObject()` methods. These methods are not called for serialization of `Externalizable` objects.\n\n**Example:**\n\n\n      abstract class Crucial implements Externalizable {\n        int value;\n        private void readObject(ObjectInputStream in) {\n          value = in.readInt();\n        }\n      }\n"
-        },
-        {
-          "shortName": "NonSerializableFieldInSerializableClass",
-          "displayName": "Non-serializable field in a Serializable class",
-          "enabled": true,
-          "description": "Reports non-serializable fields in classes that implement `java.io.Serializable`. Such fields will result in runtime exceptions if the object is serialized.\n\n\nFields declared\n`transient` or `static`\nare not reported, nor are fields of classes that have a `writeObject` method defined.\n\n\nThis inspection assumes fields of the types\n`java.util.Collection` and\n`java.util.Map` to be\n`Serializable`, unless the types\nthey are declared in are non-`Serializable`.\n\n**Example:**\n\n\n      class NonSerializableClass {}\n\n      public class SerializableClass implements Serializable {\n          NonSerializableClass clazz; // warning: Non-serializable field 'clazz' in a Serializable class\n          static NonSerializableClass staticClazz; // no warnings\n      }\n      \n\nUse the following options to configure the inspection:\n\n* List classes whose inheritors should not be reported by this inspection. This is meant for classes that inherit `Serializable` from a superclass but are not intended for serialization.\n* List annotations that will make the inspection ignore the annotated fields.\n* Whether to ignore fields initialized with an anonymous class."
-        },
-        {
-          "shortName": "TransientFieldNotInitialized",
-          "displayName": "Transient field is not initialized on deserialization",
-          "enabled": false,
-          "description": "Reports `transient` fields that are initialized during normal object construction, but whose class does not have a `readObject` method.\n\n\nAs `transient` fields are not serialized they need\nto be initialized separately in a `readObject()` method\nduring deserialization.\n\n\nAny `transient` fields that\nare not initialized during normal object construction are considered to use the default\ninitialization and are not reported by this inspection.\n\n**Example:**\n\n\n      class Person implements Serializable {\n        transient String name = \"Default\"; //warning, can actually be a null after deserialization\n        transient String surname; //null is considered the default value and not reported\n      }\n"
-        },
-        {
-          "shortName": "ReadObjectAndWriteObjectPrivate",
-          "displayName": "'readObject()' or 'writeObject()' not declared 'private'",
-          "enabled": false,
-          "description": "Reports `Serializable` classes where the `readObject` or `writeObject` methods are not declared private. There is no reason these methods should ever have a higher visibility than `private`.\n\n\nA quick-fix is suggested to make the corresponding method `private`.\n\n**Example:**\n\n\n      public class Test implements Serializable {\n        public void readObject(ObjectInputStream stream) {\n          /* ... */\n        }\n      }\n\nAfter the quick-fix is applied:\n\n\n      public class Test implements Serializable {\n        private void readObject(ObjectInputStream stream) {\n          /* ... */\n        }\n      }\n"
-        },
-        {
-          "shortName": "SerializableWithUnconstructableAncestor",
-          "displayName": "Serializable class with unconstructable ancestor",
-          "enabled": false,
-          "description": "Reports `Serializable` classes whose closest non-serializable ancestor doesn't have a no-argument constructor. Such classes cannot be deserialized and will fail with an `InvalidClassException`.\n\n**Example:**\n\n\n      class Ancestor {\n        private String name;\n        Ancestor(String name) {\n          this.name = name;\n        }\n      }\n\n      // warning on this class because the superclass is not\n      // serializable, and its constructor takes arguments\n      class Descendant extends Ancestor implements Serializable {\n        Descendant() {\n          super(\"Bob\");\n        }\n      }\n"
-        },
-        {
-          "shortName": "SerialVersionUIDNotStaticFinal",
-          "displayName": "'serialVersionUID' field not declared 'private static final long'",
-          "enabled": false,
-          "description": "Reports `Serializable` classes whose `serialVersionUID` field is not declared `private static final long`.\n\n**Example:**\n\n\n      class SampleClass implements Serializable {\n        private long serialVersionUID = 1; // field of a Serializable class is not declared 'private static final long'\n\n        public SampleClass() {\n            System.out.println(serialVersionUID);\n        }\n      }\n"
-        },
-        {
-          "shortName": "SerializableInnerClassWithNonSerializableOuterClass",
-          "displayName": "Serializable non-'static' inner class with non-Serializable outer class",
-          "enabled": false,
-          "description": "Reports non-static inner classes that implement `Serializable` and are declared inside a class that doesn't implement `Serializable`.\n\n\nSuch classes are unlikely to serialize correctly due to implicit references to the outer class.\n\n**Example:**\n\n\n      class A {\n        class Main implements Serializable {\n        }\n      }\n\nUse the following options to configure the inspection:\n\n* List classes whose inheritors should not be reported by this inspection. This is meant for classes that inherit `Serializable` from a superclass but are not intended for serialization.\n* Whether to ignore `Serializable` anonymous classes."
-        },
-        {
-          "shortName": "SerializableInnerClassHasSerialVersionUIDField",
-          "displayName": "Serializable non-static inner class without 'serialVersionUID'",
-          "enabled": false,
-          "description": "Reports non-static inner classes that implement `java.io.Serializable`, but do not define a `serialVersionUID` field.\n\n\nWithout a `serialVersionUID` field, any change to the class will make previously\nserialized versions unreadable. It is strongly recommended that `Serializable`\nnon-static inner classes have a `serialVersionUID` field, otherwise the default\nserialization algorithm may result in serialized versions being incompatible between\ncompilers due to differences in synthetic accessor methods.\n\n\nA quick-fix is suggested to add the missing `serialVersionUID` field.\n\n**Example:**\n\n\n      class Outer {\n          class Inner implements Serializable {}\n      }\n\nAfter the quick-fix is applied:\n\n\n      class Outer {\n          class Inner implements Serializable {\n              private static final long serialVersionUID = -7004458730436243902L;\n          }\n      }\n\nUse the following options to configure the inspection:\n\n* List classes whose inheritors should not be reported by this inspection. This is meant for classes that inherit `Serializable` from a superclass but are not intended for serialization.\n* Whether to ignore `Serializable` anonymous classes."
-        },
-        {
-          "shortName": "ReadResolveAndWriteReplaceProtected",
-          "displayName": "'readResolve()' or 'writeReplace()' not declared 'protected'",
-          "enabled": false,
-          "description": "Reports classes that implement `java.io.Serializable` where the `readResolve()` or `writeReplace()` methods are not declared `protected`.\n\n\nDeclaring `readResolve()` and `writeReplace()` methods `private`\ncan force subclasses to silently ignore them, while declaring them\n`public` allows them to be invoked by untrusted code.\n\n\nIf the containing class is declared `final`, these methods can be declared `private`.\n\n**Example:**\n\n\n      class ClassWithSerialization implements Serializable {\n        public Object writeReplace() { // warning: 'writeReplace()' not declared protected\n            ...\n        }\n      }\n      \n"
-        },
-        {
-          "shortName": "ExternalizableWithoutPublicNoArgConstructor",
-          "displayName": "Externalizable class without 'public' no-arg constructor",
-          "enabled": true,
-          "description": "Reports `Externalizable` classes without a public no-argument constructor.\n\nWhen an `Externalizable` object is reconstructed, an instance is created using the public\nno-arg constructor before the `readExternal` method called. If a public\nno-arg constructor is not available, a `java.io.InvalidClassException` will be\nthrown at runtime."
-        },
-        {
-          "shortName": "MissingSerialAnnotation",
-          "displayName": "@Serial annotation could be used",
-          "enabled": true,
-          "description": "Reports methods and fields in the `Serializable` and `Externalizable` classes that are suitable to be annotated with the `java.io.Serial` annotation. The quick-fix adds the annotation.\n\n**Example:**\n\n\n    class Main implements Serializable {\n      private static final long serialVersionUID = 7874493593505141603L;\n\n      private void writeObject(ObjectOutputStream out) throws IOException {\n      }\n    }\n\nAfter the quick-fix is applied:\n\n\n      class Main implements Serializable {\n        @Serial\n        private static final long serialVersionUID = 7874493593505141603L;\n\n        @Serial\n        private void writeObject(ObjectOutputStream out) throws IOException {\n        }\n    }\n\n**Example:**\n\n\n      class Main implements Externalizable {\n        protected Object readResolve() throws ObjectStreamException {\n          return \"SomeObject\";\n        }\n      }\n\nAfter the quick-fix is applied:\n\n\n      class Main implements Externalizable {\n        @Serial\n        protected Object readResolve() throws ObjectStreamException {\n            return \"SomeObject\";\n        }\n      }\n\nFor more information about all possible cases, refer the documentation for `java.io.Serial`.\n\nThis inspection applies to the language level of the project or module 14 or higher.\n\nNew in 2020.3"
-        },
-        {
-          "shortName": "SerialPersistentFieldsWithWrongSignature",
-          "displayName": "'serialPersistentFields' field not declared 'private static final ObjectStreamField[]'",
-          "enabled": false,
-          "description": "Reports `Serializable` classes whose `serialPersistentFields` field is not declared as `private static final ObjectStreamField[]`.\n\n\nIf a `serialPersistentFields` field is not declared with those modifiers,\nthe serialization behavior will be as if the field was not declared at all.\n\n**Example:**\n\n\n      class List implements Serializable {\n        private List next;\n\n        ObjectStreamField[] serialPersistentFields = {new ObjectStreamField(\"next\", List.class)};\n\n      }\n"
-        },
-        {
-          "shortName": "NonSerializableObjectBoundToHttpSession",
-          "displayName": "Non-serializable object bound to HttpSession",
-          "enabled": false,
-          "description": "Reports objects of classes not implementing `java.io.Serializable` used as arguments to `javax.servlet.http.HttpSession.setAttribute()` or `javax.servlet.http.HttpSession.putValue()`.\n\n\nSuch objects will not be serialized if the `HttpSession` is passivated or migrated,\nand may result in difficult-to-diagnose bugs.\n\n\nThis inspection assumes objects of the types `java.util.Collection` and\n`java.util.Map` to be `Serializable`,\nunless type parameters are non-`Serializable`.\n\n**Example:**\n\n\n      void foo(HttpSession session) {\n          session.setAttribute(\"foo\", new NonSerializable());\n      }\n      static class NonSerializable {}\n"
-        },
-        {
-          "shortName": "SerializableRecordContainsIgnoredMembers",
-          "displayName": "'record' contains ignored members",
-          "enabled": true,
-          "description": "Reports serialization methods or fields defined in a `record` class. Serialization methods include `writeObject()`, `readObject()`, `readObjectNoData()`, `writeExternal()`, and `readExternal()` and the field `serialPersistentFields`. These members are not used for the serialization or deserialization of records and therefore unnecessary.\n\n**Examples:**\n\n\n      record R1() implements Serializable {\n        // The field is ignored during record serialization\n        @Serial\n        private static final ObjectStreamField[] serialPersistentFields = new ObjectStreamField[0];\n\n        // The method is ignored during record serialization\n        @Serial\n        private void writeObject(ObjectOutputStream out) throws IOException {\n        }\n      }\n\n\n      record R2() implements Externalizable {\n        // The method is ignored during record serialization\n        @Override\n        public void writeExternal(ObjectOutput out) throws IOException {\n        }\n\n        // The method is ignored during record serialization\n        @Override\n        public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {\n        }\n      }\n\nThis inspection applies to language level 14 or higher.\n\nNew in 2020.3"
-        },
-        {
-          "shortName": "ReadObjectInitialization",
-          "displayName": "Instance field may not be initialized by 'readObject()'",
-          "enabled": false,
-          "description": "Reports fields that are not guaranteed to be initialized after the object is deserialized by the `readObject()` method.\n\nThe inspection doesn't report transient fields.\n\n\nNote: This inspection uses a very conservative control flow algorithm, and may incorrectly report fields\nas uninitialized.\n\n**Example:**\n\n\n    class DataObject implements Serializable {\n      String s; // s is not initialized in readObject\n      int i;\n\n      private void readObject(ObjectInputStream stream) throws IOException {\n        i = stream.readInt();\n      }\n    }\n"
-        },
-        {
-          "shortName": "SerializableHasSerializationMethods",
-          "displayName": "Serializable class without 'readObject()' and 'writeObject()'",
-          "enabled": false,
-          "description": "Reports `Serializable` classes that do not implement `readObject()` and `writeObject()` methods.\n\n\nIf `readObject()` and `writeObject()` methods are not implemented,\nthe default serialization algorithms are used,\nwhich may be sub-optimal for performance and compatibility in many environments.\n\n\nUse the following options to configure the inspection:\n\n* List classes whose inheritors should not be reported by this inspection. This is meant for classes that inherit `Serializable` from a superclass but are not intended for serialization.\n* Whether to ignore `Serializable` classes without non-static fields.\n* Whether to ignore `Serializable` anonymous classes."
-        },
-        {
-          "shortName": "NonSerializableWithSerialVersionUIDField",
-          "displayName": "Non-serializable class with 'serialVersionUID'",
-          "enabled": false,
-          "description": "Reports non-`Serializable` classes that define a `serialVersionUID` field. A `serialVersionUID` field in that context normally indicates an error because the field will be ignored and the class will not be serialized.\n\n**Example:**\n\n\n      public class IWantToSerializeThis {\n        private static final long serialVersionUID = 2669293150219020249L;\n      }\n"
-        },
-        {
-          "shortName": "TransientFieldInNonSerializableClass",
-          "displayName": "Transient field in non-serializable class",
-          "enabled": false,
-          "description": "Reports `transient` fields in classes that do not implement `java.io.Serializable`.\n\n**Example:**\n\n\n      public class NonSerializableClass {\n        private transient String password; // warning: Field 'password' is marked 'transient', in non-Serializable class\n      }\n      \nAfter the quick-fix is applied:\n\n\n      public class NonSerializableClass {\n        private String password;\n      }\n"
-        },
-        {
-          "shortName": "SerialAnnotationUsedOnWrongMember",
-          "displayName": "'@Serial' annotation used on wrong member",
-          "enabled": true,
-          "description": "Reports methods and fields in the `Serializable` and `Externalizable` classes that are not suitable to be annotated with the `java.io.Serial` annotation.\n\n**Examples:**\n\n\n    class Test implements Serializable {\n      @Serial // The annotated field is not a part of serialization mechanism because it's not final\n      private static long serialVersionUID = 7874493593505141603L;\n\n      @Serial // The annotated method is not a part of the serialization mechanism because it's not private\n      void writeObject(ObjectOutputStream out) throws IOException {\n      }\n    }\n\n\n    class Test implements Externalizable {\n      @Serial // The annotated method is not a part of the serialization mechanism as it's inside Externalizable class\n      private void writeObject(ObjectOutputStream out) throws IOException {\n      }\n    }\n\nFor information about all valid cases, refer the documentation for `java.io.Serial`.\n\nThis inspection only reports if the language level of the project or module is 14 or higher.\n\nNew in 2020.3"
-        },
-        {
-          "shortName": "NonSerializableWithSerializationMethods",
-          "displayName": "Non-serializable class with 'readObject()' or 'writeObject()'",
-          "enabled": false,
-          "description": "Reports non-`Serializable` classes that define `readObject()` or `writeObject()` methods. Such methods in that context normally indicate an error.\n\n**Example:**\n\n\n      public class SampleClass {\n        private void readObject(ObjectInputStream str) {}\n        private void writeObject(ObjectOutputStream str) {}\n      }\n"
-        },
-        {
-          "shortName": "NonSerializableObjectPassedToObjectStream",
-          "displayName": "Non-serializable object passed to ObjectOutputStream",
-          "enabled": false,
-          "description": "Reports non-`Serializable` objects used as arguments to `java.io.ObjectOutputStream.write()`. Such calls will result in runtime exceptions.\n\n\nThis inspection assumes objects of the types `java.util.Collection` and\n`java.util.Map` to be `Serializable`, unless the types\nthey are declared in are non-`Serializable`.\n\n**Example:**\n\n\n      public class IWantToSerializeThis {\n        public static void main(String[] args) throws IOException {\n          try(var stream = new ObjectOutputStream(Files.newOutputStream(Paths.get(\"output\")))) {\n            // Warning -- will fail with NotSerializableException\n            stream.writeObject(new IWantToSerializeThis());\n          }\n        }\n      }\n"
-        }
-      ]
-    },
-    {
       "name": "Class structure",
       "inspections": [
         {
@@ -4217,6 +4074,149 @@
           "displayName": "Constant declared in interface",
           "enabled": false,
           "description": "Reports constants (`public static final` fields) declared in interfaces.\n\nSome coding standards require declaring constants in abstract classes instead."
+        }
+      ]
+    },
+    {
+      "name": "Serialization issues",
+      "inspections": [
+        {
+          "shortName": "ComparatorNotSerializable",
+          "displayName": "Comparator class not declared Serializable",
+          "enabled": false,
+          "description": "Reports classes that implement `java.lang.Comparator`, but do not implement `java.io.Serializable`.\n\n\nIf a non-serializable comparator is used to construct an ordered collection such\nas a `java.util.TreeMap` or `java.util.TreeSet`, then the\ncollection will also be non-serializable. This can result in unexpected and\ndifficult-to-diagnose bugs.\n\n\nSince subclasses of `java.lang.Comparator` are often stateless,\nsimply marking them serializable is a small cost to avoid such issues.\n\n**Example:**\n\n\n      class Foo implements Comparator { // warning\n          @Override\n          public int compare(Object o1, Object o2) {\n              /* ... */\n          }\n      }\n\nAfter the quick-fix is applied:\n\n\n      class Foo implements Comparator, Serializable { // no warning here\n          @Override\n          public int compare(Object o1, Object o2) {\n              /* ... */\n          }\n      }\n"
+        },
+        {
+          "shortName": "SerializableStoresNonSerializable",
+          "displayName": "'Serializable' object implicitly stores non-'Serializable' object",
+          "enabled": false,
+          "description": "Reports any references to local non-`Serializable` variables outside `Serializable` lambdas, local and anonymous classes.\n\n\nWhen a local variable is referenced from an anonymous class, its value\nis stored in an implicit field of that class. The same happens\nfor local classes and lambdas. If the variable is of a\nnon-`Serializable` type, serialization will fail.\n\n**Example:**\n\n\n      interface A extends Serializable {\n          abstract void foo();\n      }\n      class B {}\n      class C {\n          void foo() {\n              B b = new B();\n              A a = new A() {\n                  @Override\n                  public void foo() {\n                      System.out.println(b); // warning\n                  }\n              };\n          }\n      }\n"
+        },
+        {
+          "shortName": "ExternalizableWithSerializationMethods",
+          "displayName": "Externalizable class with 'readObject()' or 'writeObject()'",
+          "enabled": false,
+          "description": "Reports `Externalizable` classes that define `readObject()` or `writeObject()` methods. These methods are not called for serialization of `Externalizable` objects.\n\n**Example:**\n\n\n      abstract class Crucial implements Externalizable {\n        int value;\n        private void readObject(ObjectInputStream in) {\n          value = in.readInt();\n        }\n      }\n"
+        },
+        {
+          "shortName": "NonSerializableFieldInSerializableClass",
+          "displayName": "Non-serializable field in a Serializable class",
+          "enabled": true,
+          "description": "Reports non-serializable fields in classes that implement `java.io.Serializable`. Such fields will result in runtime exceptions if the object is serialized.\n\n\nFields declared\n`transient` or `static`\nare not reported, nor are fields of classes that have a `writeObject` method defined.\n\n\nThis inspection assumes fields of the types\n`java.util.Collection` and\n`java.util.Map` to be\n`Serializable`, unless the types\nthey are declared in are non-`Serializable`.\n\n**Example:**\n\n\n      class NonSerializableClass {}\n\n      public class SerializableClass implements Serializable {\n          NonSerializableClass clazz; // warning: Non-serializable field 'clazz' in a Serializable class\n          static NonSerializableClass staticClazz; // no warnings\n      }\n      \n\nUse the following options to configure the inspection:\n\n* List classes whose inheritors should not be reported by this inspection. This is meant for classes that inherit `Serializable` from a superclass but are not intended for serialization.\n* List annotations that will make the inspection ignore the annotated fields.\n* Whether to ignore fields initialized with an anonymous class."
+        },
+        {
+          "shortName": "TransientFieldNotInitialized",
+          "displayName": "Transient field is not initialized on deserialization",
+          "enabled": false,
+          "description": "Reports `transient` fields that are initialized during normal object construction, but whose class does not have a `readObject` method.\n\n\nAs `transient` fields are not serialized they need\nto be initialized separately in a `readObject()` method\nduring deserialization.\n\n\nAny `transient` fields that\nare not initialized during normal object construction are considered to use the default\ninitialization and are not reported by this inspection.\n\n**Example:**\n\n\n      class Person implements Serializable {\n        transient String name = \"Default\"; //warning, can actually be a null after deserialization\n        transient String surname; //null is considered the default value and not reported\n      }\n"
+        },
+        {
+          "shortName": "ReadObjectAndWriteObjectPrivate",
+          "displayName": "'readObject()' or 'writeObject()' not declared 'private'",
+          "enabled": false,
+          "description": "Reports `Serializable` classes where the `readObject` or `writeObject` methods are not declared private. There is no reason these methods should ever have a higher visibility than `private`.\n\n\nA quick-fix is suggested to make the corresponding method `private`.\n\n**Example:**\n\n\n      public class Test implements Serializable {\n        public void readObject(ObjectInputStream stream) {\n          /* ... */\n        }\n      }\n\nAfter the quick-fix is applied:\n\n\n      public class Test implements Serializable {\n        private void readObject(ObjectInputStream stream) {\n          /* ... */\n        }\n      }\n"
+        },
+        {
+          "shortName": "SerializableWithUnconstructableAncestor",
+          "displayName": "Serializable class with unconstructable ancestor",
+          "enabled": false,
+          "description": "Reports `Serializable` classes whose closest non-serializable ancestor doesn't have a no-argument constructor. Such classes cannot be deserialized and will fail with an `InvalidClassException`.\n\n**Example:**\n\n\n      class Ancestor {\n        private String name;\n        Ancestor(String name) {\n          this.name = name;\n        }\n      }\n\n      // warning on this class because the superclass is not\n      // serializable, and its constructor takes arguments\n      class Descendant extends Ancestor implements Serializable {\n        Descendant() {\n          super(\"Bob\");\n        }\n      }\n"
+        },
+        {
+          "shortName": "SerialVersionUIDNotStaticFinal",
+          "displayName": "'serialVersionUID' field not declared 'private static final long'",
+          "enabled": false,
+          "description": "Reports `Serializable` classes whose `serialVersionUID` field is not declared `private static final long`.\n\n**Example:**\n\n\n      class SampleClass implements Serializable {\n        private long serialVersionUID = 1; // field of a Serializable class is not declared 'private static final long'\n\n        public SampleClass() {\n            System.out.println(serialVersionUID);\n        }\n      }\n"
+        },
+        {
+          "shortName": "SerializableInnerClassWithNonSerializableOuterClass",
+          "displayName": "Serializable non-'static' inner class with non-Serializable outer class",
+          "enabled": false,
+          "description": "Reports non-static inner classes that implement `Serializable` and are declared inside a class that doesn't implement `Serializable`.\n\n\nSuch classes are unlikely to serialize correctly due to implicit references to the outer class.\n\n**Example:**\n\n\n      class A {\n        class Main implements Serializable {\n        }\n      }\n\nUse the following options to configure the inspection:\n\n* List classes whose inheritors should not be reported by this inspection. This is meant for classes that inherit `Serializable` from a superclass but are not intended for serialization.\n* Whether to ignore `Serializable` anonymous classes."
+        },
+        {
+          "shortName": "SerializableInnerClassHasSerialVersionUIDField",
+          "displayName": "Serializable non-static inner class without 'serialVersionUID'",
+          "enabled": false,
+          "description": "Reports non-static inner classes that implement `java.io.Serializable`, but do not define a `serialVersionUID` field.\n\n\nWithout a `serialVersionUID` field, any change to the class will make previously\nserialized versions unreadable. It is strongly recommended that `Serializable`\nnon-static inner classes have a `serialVersionUID` field, otherwise the default\nserialization algorithm may result in serialized versions being incompatible between\ncompilers due to differences in synthetic accessor methods.\n\n\nA quick-fix is suggested to add the missing `serialVersionUID` field.\n\n**Example:**\n\n\n      class Outer {\n          class Inner implements Serializable {}\n      }\n\nAfter the quick-fix is applied:\n\n\n      class Outer {\n          class Inner implements Serializable {\n              private static final long serialVersionUID = -7004458730436243902L;\n          }\n      }\n\nUse the following options to configure the inspection:\n\n* List classes whose inheritors should not be reported by this inspection. This is meant for classes that inherit `Serializable` from a superclass but are not intended for serialization.\n* Whether to ignore `Serializable` anonymous classes."
+        },
+        {
+          "shortName": "ReadResolveAndWriteReplaceProtected",
+          "displayName": "'readResolve()' or 'writeReplace()' not declared 'protected'",
+          "enabled": false,
+          "description": "Reports classes that implement `java.io.Serializable` where the `readResolve()` or `writeReplace()` methods are not declared `protected`.\n\n\nDeclaring `readResolve()` and `writeReplace()` methods `private`\ncan force subclasses to silently ignore them, while declaring them\n`public` allows them to be invoked by untrusted code.\n\n\nIf the containing class is declared `final`, these methods can be declared `private`.\n\n**Example:**\n\n\n      class ClassWithSerialization implements Serializable {\n        public Object writeReplace() { // warning: 'writeReplace()' not declared protected\n            ...\n        }\n      }\n      \n"
+        },
+        {
+          "shortName": "ExternalizableWithoutPublicNoArgConstructor",
+          "displayName": "Externalizable class without 'public' no-arg constructor",
+          "enabled": true,
+          "description": "Reports `Externalizable` classes without a public no-argument constructor.\n\nWhen an `Externalizable` object is reconstructed, an instance is created using the public\nno-arg constructor before the `readExternal` method called. If a public\nno-arg constructor is not available, a `java.io.InvalidClassException` will be\nthrown at runtime."
+        },
+        {
+          "shortName": "MissingSerialAnnotation",
+          "displayName": "@Serial annotation could be used",
+          "enabled": true,
+          "description": "Reports methods and fields in the `Serializable` and `Externalizable` classes that are suitable to be annotated with the `java.io.Serial` annotation. The quick-fix adds the annotation.\n\n**Example:**\n\n\n    class Main implements Serializable {\n      private static final long serialVersionUID = 7874493593505141603L;\n\n      private void writeObject(ObjectOutputStream out) throws IOException {\n      }\n    }\n\nAfter the quick-fix is applied:\n\n\n      class Main implements Serializable {\n        @Serial\n        private static final long serialVersionUID = 7874493593505141603L;\n\n        @Serial\n        private void writeObject(ObjectOutputStream out) throws IOException {\n        }\n    }\n\n**Example:**\n\n\n      class Main implements Externalizable {\n        protected Object readResolve() throws ObjectStreamException {\n          return \"SomeObject\";\n        }\n      }\n\nAfter the quick-fix is applied:\n\n\n      class Main implements Externalizable {\n        @Serial\n        protected Object readResolve() throws ObjectStreamException {\n            return \"SomeObject\";\n        }\n      }\n\nFor more information about all possible cases, refer the documentation for `java.io.Serial`.\n\nThis inspection applies to the language level of the project or module 14 or higher.\n\nNew in 2020.3"
+        },
+        {
+          "shortName": "SerialPersistentFieldsWithWrongSignature",
+          "displayName": "'serialPersistentFields' field not declared 'private static final ObjectStreamField[]'",
+          "enabled": false,
+          "description": "Reports `Serializable` classes whose `serialPersistentFields` field is not declared as `private static final ObjectStreamField[]`.\n\n\nIf a `serialPersistentFields` field is not declared with those modifiers,\nthe serialization behavior will be as if the field was not declared at all.\n\n**Example:**\n\n\n      class List implements Serializable {\n        private List next;\n\n        ObjectStreamField[] serialPersistentFields = {new ObjectStreamField(\"next\", List.class)};\n\n      }\n"
+        },
+        {
+          "shortName": "NonSerializableObjectBoundToHttpSession",
+          "displayName": "Non-serializable object bound to HttpSession",
+          "enabled": false,
+          "description": "Reports objects of classes not implementing `java.io.Serializable` used as arguments to `javax.servlet.http.HttpSession.setAttribute()` or `javax.servlet.http.HttpSession.putValue()`.\n\n\nSuch objects will not be serialized if the `HttpSession` is passivated or migrated,\nand may result in difficult-to-diagnose bugs.\n\n\nThis inspection assumes objects of the types `java.util.Collection` and\n`java.util.Map` to be `Serializable`,\nunless type parameters are non-`Serializable`.\n\n**Example:**\n\n\n      void foo(HttpSession session) {\n          session.setAttribute(\"foo\", new NonSerializable());\n      }\n      static class NonSerializable {}\n"
+        },
+        {
+          "shortName": "SerializableRecordContainsIgnoredMembers",
+          "displayName": "'record' contains ignored members",
+          "enabled": true,
+          "description": "Reports serialization methods or fields defined in a `record` class. Serialization methods include `writeObject()`, `readObject()`, `readObjectNoData()`, `writeExternal()`, and `readExternal()` and the field `serialPersistentFields`. These members are not used for the serialization or deserialization of records and therefore unnecessary.\n\n**Examples:**\n\n\n      record R1() implements Serializable {\n        // The field is ignored during record serialization\n        @Serial\n        private static final ObjectStreamField[] serialPersistentFields = new ObjectStreamField[0];\n\n        // The method is ignored during record serialization\n        @Serial\n        private void writeObject(ObjectOutputStream out) throws IOException {\n        }\n      }\n\n\n      record R2() implements Externalizable {\n        // The method is ignored during record serialization\n        @Override\n        public void writeExternal(ObjectOutput out) throws IOException {\n        }\n\n        // The method is ignored during record serialization\n        @Override\n        public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {\n        }\n      }\n\nThis inspection applies to language level 14 or higher.\n\nNew in 2020.3"
+        },
+        {
+          "shortName": "ReadObjectInitialization",
+          "displayName": "Instance field may not be initialized by 'readObject()'",
+          "enabled": false,
+          "description": "Reports fields that are not guaranteed to be initialized after the object is deserialized by the `readObject()` method.\n\nThe inspection doesn't report transient fields.\n\n\nNote: This inspection uses a very conservative control flow algorithm, and may incorrectly report fields\nas uninitialized.\n\n**Example:**\n\n\n    class DataObject implements Serializable {\n      String s; // s is not initialized in readObject\n      int i;\n\n      private void readObject(ObjectInputStream stream) throws IOException {\n        i = stream.readInt();\n      }\n    }\n"
+        },
+        {
+          "shortName": "SerializableHasSerializationMethods",
+          "displayName": "Serializable class without 'readObject()' and 'writeObject()'",
+          "enabled": false,
+          "description": "Reports `Serializable` classes that do not implement `readObject()` and `writeObject()` methods.\n\n\nIf `readObject()` and `writeObject()` methods are not implemented,\nthe default serialization algorithms are used,\nwhich may be sub-optimal for performance and compatibility in many environments.\n\n\nUse the following options to configure the inspection:\n\n* List classes whose inheritors should not be reported by this inspection. This is meant for classes that inherit `Serializable` from a superclass but are not intended for serialization.\n* Whether to ignore `Serializable` classes without non-static fields.\n* Whether to ignore `Serializable` anonymous classes."
+        },
+        {
+          "shortName": "NonSerializableWithSerialVersionUIDField",
+          "displayName": "Non-serializable class with 'serialVersionUID'",
+          "enabled": false,
+          "description": "Reports non-`Serializable` classes that define a `serialVersionUID` field. A `serialVersionUID` field in that context normally indicates an error because the field will be ignored and the class will not be serialized.\n\n**Example:**\n\n\n      public class IWantToSerializeThis {\n        private static final long serialVersionUID = 2669293150219020249L;\n      }\n"
+        },
+        {
+          "shortName": "TransientFieldInNonSerializableClass",
+          "displayName": "Transient field in non-serializable class",
+          "enabled": false,
+          "description": "Reports `transient` fields in classes that do not implement `java.io.Serializable`.\n\n**Example:**\n\n\n      public class NonSerializableClass {\n        private transient String password; // warning: Field 'password' is marked 'transient', in non-Serializable class\n      }\n      \nAfter the quick-fix is applied:\n\n\n      public class NonSerializableClass {\n        private String password;\n      }\n"
+        },
+        {
+          "shortName": "SerialAnnotationUsedOnWrongMember",
+          "displayName": "'@Serial' annotation used on wrong member",
+          "enabled": true,
+          "description": "Reports methods and fields in the `Serializable` and `Externalizable` classes that are not suitable to be annotated with the `java.io.Serial` annotation.\n\n**Examples:**\n\n\n    class Test implements Serializable {\n      @Serial // The annotated field is not a part of serialization mechanism because it's not final\n      private static long serialVersionUID = 7874493593505141603L;\n\n      @Serial // The annotated method is not a part of the serialization mechanism because it's not private\n      void writeObject(ObjectOutputStream out) throws IOException {\n      }\n    }\n\n\n    class Test implements Externalizable {\n      @Serial // The annotated method is not a part of the serialization mechanism as it's inside Externalizable class\n      private void writeObject(ObjectOutputStream out) throws IOException {\n      }\n    }\n\nFor information about all valid cases, refer the documentation for `java.io.Serial`.\n\nThis inspection only reports if the language level of the project or module is 14 or higher.\n\nNew in 2020.3"
+        },
+        {
+          "shortName": "NonSerializableWithSerializationMethods",
+          "displayName": "Non-serializable class with 'readObject()' or 'writeObject()'",
+          "enabled": false,
+          "description": "Reports non-`Serializable` classes that define `readObject()` or `writeObject()` methods. Such methods in that context normally indicate an error.\n\n**Example:**\n\n\n      public class SampleClass {\n        private void readObject(ObjectInputStream str) {}\n        private void writeObject(ObjectOutputStream str) {}\n      }\n"
+        },
+        {
+          "shortName": "NonSerializableObjectPassedToObjectStream",
+          "displayName": "Non-serializable object passed to ObjectOutputStream",
+          "enabled": false,
+          "description": "Reports non-`Serializable` objects used as arguments to `java.io.ObjectOutputStream.write()`. Such calls will result in runtime exceptions.\n\n\nThis inspection assumes objects of the types `java.util.Collection` and\n`java.util.Map` to be `Serializable`, unless the types\nthey are declared in are non-`Serializable`.\n\n**Example:**\n\n\n      public class IWantToSerializeThis {\n        public static void main(String[] args) throws IOException {\n          try(var stream = new ObjectOutputStream(Files.newOutputStream(Paths.get(\"output\")))) {\n            // Warning -- will fail with NotSerializableException\n            stream.writeObject(new IWantToSerializeThis());\n          }\n        }\n      }\n"
         }
       ]
     },
@@ -4502,16 +4502,16 @@
           "description": "Reports classes that refer to their subclasses in static initializers or static fields.\n\nSuch references can cause JVM-level deadlocks in multithreaded environment, when one thread tries to load the superclass\nand another thread tries to load the subclass at the same time.\n\n**Example:**\n\n\n      class Parent {\n        static final Child field = new Child();\n      }\n      class Child extends Parent { }\n"
         },
         {
-          "shortName": "NonSynchronizedMethodOverridesSynchronizedMethod",
-          "displayName": "Unsynchronized method overrides synchronized method",
-          "enabled": true,
-          "description": "Reports non-`synchronized` methods overriding `synchronized` methods.\n\n\nThe overridden method will not be automatically synchronized if the superclass method\nis declared as `synchronized`. This may result in unexpected race conditions when using the subclass.\n\n**Example:**\n\n\n      class Super {\n        synchronized void process() {}\n      }\n      class Sub extends Super {\n        // Unsynchronized method 'process()' overrides synchronized method\n        void process() {}\n      }  \n"
-        },
-        {
           "shortName": "WaitCalledOnCondition",
           "displayName": "'wait()' called on 'java.util.concurrent.locks.Condition' object",
           "enabled": false,
           "description": "Reports calls to `wait()` made on a `java.util.concurrent.locks.Condition` object. This is probably a programming error, and some variant of the `await()` method was intended instead.\n\n**Example:**\n\n\n      void acquire(Condition released) throws InterruptedException {\n        while (acquired) {\n          released.wait();\n        }\n      }\n\nGood code would look like this:\n\n\n      void acquire(Condition released) throws InterruptedException {\n        while (acquired) {\n          released.await();\n        }\n      }\n"
+        },
+        {
+          "shortName": "NonSynchronizedMethodOverridesSynchronizedMethod",
+          "displayName": "Unsynchronized method overrides synchronized method",
+          "enabled": true,
+          "description": "Reports non-`synchronized` methods overriding `synchronized` methods.\n\n\nThe overridden method will not be automatically synchronized if the superclass method\nis declared as `synchronized`. This may result in unexpected race conditions when using the subclass.\n\n**Example:**\n\n\n      class Super {\n        synchronized void process() {}\n      }\n      class Sub extends Super {\n        // Unsynchronized method 'process()' overrides synchronized method\n        void process() {}\n      }  \n"
         },
         {
           "shortName": "WaitNotifyNotInSynchronizedContext",
@@ -4944,16 +4944,16 @@
           "description": "Reports equality expressions which are negated by a prefix expression.\n\nSuch expressions can be simplified using the `!=` operator.\n\nExample:\n\n\n      !(i == 1)\n\nAfter the quick-fix is applied:\n\n\n      i != 1\n"
         },
         {
-          "shortName": "DoubleNegation",
-          "displayName": "Double negation",
-          "enabled": true,
-          "description": "Reports double negations that can be simplified.\n\nExample:\n\n\n      if (!!functionCall()) {}\n\nAfter the quick-fix is applied:\n\n\n      if (functionCall()) {}\n\nExample:\n\n\n      if (!(a != b)) {}\n\nAfter the quick-fix is applied:\n\n\n      if (a == b) {}\n"
-        },
-        {
           "shortName": "AssertionCanBeIf",
           "displayName": "Assertion can be replaced with 'if' statement",
           "enabled": false,
           "description": "Reports `assert` statements and suggests replacing them with `if` statements that throw `java.lang.AssertionError`.\n\nExample:\n\n\n      assert param != null;\n\nAfter the quick-fix is applied:\n\n\n      if (param == null) throw new AssertionError();\n"
+        },
+        {
+          "shortName": "DoubleNegation",
+          "displayName": "Double negation",
+          "enabled": true,
+          "description": "Reports double negations that can be simplified.\n\nExample:\n\n\n      if (!!functionCall()) {}\n\nAfter the quick-fix is applied:\n\n\n      if (functionCall()) {}\n\nExample:\n\n\n      if (!(a != b)) {}\n\nAfter the quick-fix is applied:\n\n\n      if (a == b) {}\n"
         },
         {
           "shortName": "BreakStatement",
@@ -9573,16 +9573,16 @@
           "description": "Reports methods whose number of statements exceeds the specified maximum.\n\nMethods with too many statements may be confusing and are a good sign that refactoring is necessary.\n\nThe following statements are not counted:\n\n* empty statements (semicolons)\n* block statements\n* `for` loop initialization statements, that is, `int i = ...` within a `for(int i = ...;...)` statement\n* `for` loop update statements, that is, `i += 2` within a `for(int i = ...;...; i += 2)` statement\n\nUse the **Maximum statements per method** field to specify the maximum allowed number of statements in a method."
         },
         {
-          "shortName": "OverlyLongLambda",
-          "displayName": "Overly long lambda expression",
-          "enabled": false,
-          "description": "Reports lambda expressions whose number of statements exceeds the specified maximum.\n\nLambda expressions that are too long may be confusing, and it is often better to extract the statements into a separate method.\n\n\nThe following statements are not counted:\n\n* empty statements (semicolons)\n* block statements\n* `for` loop initialization statements, that is, `int i = ...` within a `for(int i = ...;...)` statement\n* `for` loop update statements, that is, `i += 2` within a `for(int i = ...;...; i += 2)` statement\n\nUse the **Non-comment source statements limit** field to specify the maximum allowed number of statements in a lambda expression."
-        },
-        {
           "shortName": "ParametersPerMethod",
           "displayName": "Method with too many parameters",
           "enabled": false,
           "description": "Reports methods whose number of parameters exceeds the specified maximum. Methods with too many parameters can be a good sign that a refactoring is necessary.\n\nMethods that have super methods are not reported.\n\nUse the **Parameter limit** field to specify the maximum allowed number of parameters for a method."
+        },
+        {
+          "shortName": "OverlyLongLambda",
+          "displayName": "Overly long lambda expression",
+          "enabled": false,
+          "description": "Reports lambda expressions whose number of statements exceeds the specified maximum.\n\nLambda expressions that are too long may be confusing, and it is often better to extract the statements into a separate method.\n\n\nThe following statements are not counted:\n\n* empty statements (semicolons)\n* block statements\n* `for` loop initialization statements, that is, `int i = ...` within a `for(int i = ...;...)` statement\n* `for` loop update statements, that is, `i += 2` within a `for(int i = ...;...; i += 2)` statement\n\nUse the **Non-comment source statements limit** field to specify the maximum allowed number of statements in a lambda expression."
         },
         {
           "shortName": "MethodCoupling",
