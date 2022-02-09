@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller("/settings")
 @Slf4j
@@ -22,8 +23,8 @@ public class SettingsController {
 
     @GetMapping("/settings")
     public String thirdSystemSettings(Model model) {
-        TrelloSettingEntity trelloSetting = trelloSettingService.getTrelloSetting();
-        model.addAttribute("trelloSetting", trelloSetting);
+        Optional<TrelloSettingEntity> trelloSettingEntityOptional = trelloSettingService.getTrelloSetting();
+        model.addAttribute("trelloSetting", trelloSettingEntityOptional.orElse(null));
         return "settings";
     }
 

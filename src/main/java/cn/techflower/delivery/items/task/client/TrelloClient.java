@@ -7,7 +7,6 @@ import cn.techflower.settings.domain.entity.TrelloSettingEntity;
 import cn.techflower.settings.service.TrelloSettingService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 import static cn.techflower.foundation.error.BusinessErrorEnums.TRELLO_AUTH_CONFIG_NOT_FOUND;
 
@@ -64,10 +64,8 @@ public class TrelloClient {
     }
 
     private String buildAuthHeader() {
-        TrelloSettingEntity currentTrelloConfig = trelloSettingService.getTrelloSetting();
-        if (StringUtils.isBlank(currentTrelloConfig.getOauthConsumerKey()) || StringUtils.isBlank(currentTrelloConfig.getOauthToken())) {
-            throw new BusinessException(TRELLO_AUTH_CONFIG_NOT_FOUND);
-        }
-        return String.format("OAuth oauth_consumer_key=\"%s\", oauth_token=\"%s\"", currentTrelloConfig.getOauthConsumerKey(), currentTrelloConfig.getOauthToken());
+        Optional<TrelloSettingEntity> trelloSettingEntityOptional = trelloSettingService.getTrelloSetting();
+        TrelloSettingEntity trelloSettingEntity = trelloSettingEntityOptional.orElseThrow(() -> new BusinessException(TRELLO_AUTH_CONFIG_NOT_FOUND));
+        return String.format("OAuth oauth_consumer_key=\"%s\", oauth_token=\"%s\"", trelloSettingEntity.getOauthConsumerKey(), trelloSettingEntity.getOauthToken());
     }
 }

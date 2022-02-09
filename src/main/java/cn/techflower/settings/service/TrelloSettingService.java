@@ -22,10 +22,11 @@ public class TrelloSettingService {
     private final TrelloSettingConverter trelloSettingConverter;
 
     public void createTrelloSetting(TrelloSettingVo trelloSettingVo) {
-        TrelloSettingEntity trelloSetting = getTrelloSetting();
-        if (Objects.nonNull(trelloSetting)) {
-            trelloSetting.setOauthConsumerKey(trelloSettingVo.getOauthConsumerKey());
-            trelloSetting.setOauthToken(trelloSettingVo.getOauthToken());
+        Optional<TrelloSettingEntity> trelloSettingOptional = getTrelloSetting();
+        if (trelloSettingOptional.isPresent()) {
+            TrelloSettingEntity trelloSettingEntity = trelloSettingOptional.get();
+            trelloSettingEntity.setOauthConsumerKey(trelloSettingVo.getOauthConsumerKey());
+            trelloSettingEntity.setOauthToken(trelloSettingVo.getOauthToken());
             return;
         }
 
@@ -34,9 +35,8 @@ public class TrelloSettingService {
         trelloSettingRepository.save(trelloSettingEntity);
     }
 
-    public TrelloSettingEntity getTrelloSetting() {
+    public Optional<TrelloSettingEntity> getTrelloSetting() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<TrelloSettingEntity> trelloSetting = trelloSettingRepository.findByOwner(name);
-        return trelloSetting.orElse(null);
+        return  trelloSettingRepository.findByOwner(name);
     }
 }

@@ -1,43 +1,44 @@
 package cn.techflower.delivery.items.task;
 
-import cn.techflower.delivery.domain.entity.DeliveryProcessEntity;
-import cn.techflower.delivery.items.task.domian.dto.TaskDto;
-import cn.techflower.delivery.items.task.domian.entity.TaskEntity;
 import cn.techflower.delivery.items.task.enums.TaskSourceType;
 import cn.techflower.delivery.items.task.presistence.TaskRepository;
 import cn.techflower.delivery.presistence.DeliveryProcessRepository;
-import cn.techflower.foundation.error.BusinessException;
+import cn.techflower.settings.domain.entity.TrelloSettingEntity;
+import cn.techflower.settings.service.TrelloSettingService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-
-import static cn.techflower.foundation.error.BusinessErrorEnums.DELIVERY_PROCESS_NOT_FOUND;
 
 @Data
 @Slf4j
 @Service
 public class TaskService {
+    private final TrelloSettingService trelloSettingService;
     private final TaskRepository taskRepository;
     private final DeliveryProcessRepository deliveryProcessRepository;
     private final ApplicationContext applicationContext;
 
-    public void bindTaskInProcess(TaskDto taskDto) {
-        TaskEntity task = new TaskEntity();
-        BeanUtils.copyProperties(taskDto, task);
+    public List<TaskSourceType> getUsefulTaskSources() {
+        List<TaskSourceType> taskSourceTypes = new ArrayList<>();
 
-        Optional<DeliveryProcessEntity> processEntityOptional = deliveryProcessRepository.findById(taskDto.getDeliveryProcessId());
-        DeliveryProcessEntity deliveryProcessEntity = processEntityOptional.orElseThrow(() -> new BusinessException(DELIVERY_PROCESS_NOT_FOUND));
-        task.setDeliveryProcess(deliveryProcessEntity);
+        Arrays.stream(TaskSourceType.values()).forEach(source -> {
+            if (source.equals(TaskSourceType.TRELLO) && trelloSettingExist()) {
+                taskSourceTypes.add(source);
+            }
+        });
 
-        taskRepository.save(task);
+        return taskSourceTypes;
+    }
+
+    private Boolean trelloSettingExist() {
+        Optional<TrelloSettingEntity> trelloSettingEntityOptional = trelloSettingService.getTrelloSetting();
+        return trelloSettingEntityOptional.isPresent();
     }
 
 }
