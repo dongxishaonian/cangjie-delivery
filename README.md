@@ -18,7 +18,7 @@
 ![流程示例](https://user-images.githubusercontent.com/17216322/149130545-f2097fcf-dd01-4c94-aa60-4b407f5d348d.png)
 
 开发流程中的各个环节同时会涉及到不同的工具：
-![process-tools](https://user-images.githubusercontent.com/17216322/152800324-1713b11d-3bab-44b7-8b30-24f9e4069dc0.png)
+![process-tools](https://user-images.githubusercontent.com/17216322/153135603-ca705b1e-d97f-418a-85fc-af9b7939fc97.png)
 
 在实际的开发过程中，根据每个团队的不同，对以上每个阶段的细化也会存在不少差异。这些差异可能和分支模型、采用的开发方法、面向的用户群体...有关，并且随着时间的推移和日常经验的积累不断演进。
 
