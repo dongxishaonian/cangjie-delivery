@@ -22,7 +22,6 @@ public class SettingsController {
 
     @GetMapping("/settings")
     public String thirdSystemSettings(Model model) {
-        log.info("thirdSystemSettings come in!!!");
         TrelloSettingEntity trelloSetting = trelloSettingService.getTrelloSetting();
         model.addAttribute("trelloSetting", trelloSetting);
         return "settings";

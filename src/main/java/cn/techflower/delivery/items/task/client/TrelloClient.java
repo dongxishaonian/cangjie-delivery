@@ -2,9 +2,9 @@ package cn.techflower.delivery.items.task.client;
 
 import cn.techflower.delivery.items.task.domian.dto.BoardDto;
 import cn.techflower.delivery.items.task.domian.dto.CardDto;
-import cn.techflower.delivery.items.task.domian.entity.TrelloConfigEntity;
-import cn.techflower.delivery.items.task.service.TrelloConfigService;
 import cn.techflower.foundation.error.BusinessException;
+import cn.techflower.settings.domain.entity.TrelloSettingEntity;
+import cn.techflower.settings.service.TrelloSettingService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +23,7 @@ import static cn.techflower.foundation.error.BusinessErrorEnums.TRELLO_AUTH_CONF
 @Data
 public class TrelloClient {
     private final ClientHttpRequestFactory clientHttpRequestFactory;
-    private final TrelloConfigService trelloConfigService;
+    private final TrelloSettingService trelloSettingService;
 
     public List<BoardDto> getBoardList() {
         RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory);
@@ -64,10 +64,10 @@ public class TrelloClient {
     }
 
     private String buildAuthHeader() {
-        TrelloConfigEntity currentTrelloConfig = trelloConfigService.getCurrentTrelloConfig();
-        if (StringUtils.isBlank(currentTrelloConfig.getTrelloKey()) || StringUtils.isBlank(currentTrelloConfig.getTrelloToken())) {
+        TrelloSettingEntity currentTrelloConfig = trelloSettingService.getTrelloSetting();
+        if (StringUtils.isBlank(currentTrelloConfig.getOauthConsumerKey()) || StringUtils.isBlank(currentTrelloConfig.getOauthToken())) {
             throw new BusinessException(TRELLO_AUTH_CONFIG_NOT_FOUND);
         }
-        return String.format("OAuth oauth_consumer_key=\"%s\", oauth_token=\"%s\"", currentTrelloConfig.getTrelloKey(), currentTrelloConfig.getTrelloToken());
+        return String.format("OAuth oauth_consumer_key=\"%s\", oauth_token=\"%s\"", currentTrelloConfig.getOauthConsumerKey(), currentTrelloConfig.getOauthToken());
     }
 }

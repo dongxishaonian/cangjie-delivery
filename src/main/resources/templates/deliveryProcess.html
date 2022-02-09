@@ -17,7 +17,7 @@
 </head>
 <body style="height: 100%;">
 
-<div  id="header">
+<div id="header">
 </div>
 <script>
     $('#header').load('/header')
@@ -31,9 +31,68 @@
 <section>
     <div>
         <h1 style="margin-top:30px">软件研发流程管理</h1>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">新建研发流程
-        </button>
-        <div style="width: 1600px;height:650px;overflow: scroll;margin-left: 30px;margin-top: 50px">
+        <h2 style="margin-top:15px">任务列表</h2>
+
+        <div class="input-group mb-3">
+            <div class="col-auto">
+                <label class="col-form-label">请选择任务来源：</label>
+            </div>
+            <div class="col-auto">
+                <select class="form-control" aria-label="Server" style="width: 300px">
+                    <option selected>Open this select menu</option>
+                </select>
+            </div>
+            <div style="margin-left: 30px" class="col-auto">
+                <label class="col-form-label">请选择看板：</label>
+            </div>
+            <div class="col-auto">
+                <select class="form-control" aria-label="Server" style="width: 250px">
+                    <option selected>Open this select menu</option>
+                </select>
+            </div>
+
+            <div style="margin-left: 50px" class="col-auto">
+                <button type="button" class="btn btn-primary">搜索</button>
+            </div>
+        </div>
+
+        <hr style="margin-bottom: 20px">
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">key</th>
+                <th scope="col">任务名称</th>
+                <th scope="col">任务描述</th>
+                <th scope="col">状态</th>
+                <th scope="col">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>Otto</td>
+                <td>@fat</td>
+            </tr>
+            <tr>
+                <th scope="row">3</th>
+                <td colspan="2">Larry the Bird</td>
+                <td>Otto</td>
+                <td>@twitter</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div style="width: 1600px;height:650px;overflow: scroll;margin-left: 30px;margin-top:50px" hidden>
             <table>
                 <tr style="margin-bottom: 15px">
                     <th style="font-size: x-large;height: 60px"
