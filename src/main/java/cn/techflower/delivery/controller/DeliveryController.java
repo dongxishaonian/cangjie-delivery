@@ -74,6 +74,12 @@ public class DeliveryController {
         return "leftBar";
     }
 
+    @GetMapping("/header")
+    public String header() {
+        return "header";
+    }
+
+
     @GetMapping(value = "/deliveryProcessTypeList", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> getDeliveryProcessTypeList() {
         StringBuilder content = new StringBuilder();
