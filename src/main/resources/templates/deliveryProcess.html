@@ -34,25 +34,30 @@
         <h2 style="margin-top:15px">任务列表</h2>
 
         <div class="input-group mb-3">
-            <div class="col-auto">
-                <label class="col-form-label">请选择任务来源：</label>
-            </div>
-            <div class="col-auto">
-                <select class="form-control" aria-label="Server" style="width: 300px">
-                    <option selected>Open this select menu</option>
-                </select>
-            </div>
-            <div style="margin-left: 30px" class="col-auto">
-                <label class="col-form-label">请选择看板：</label>
-            </div>
-            <div class="col-auto">
-                <select class="form-control" aria-label="Server" style="width: 250px">
-                    <option selected>Open this select menu</option>
-                </select>
-            </div>
+            <form id="taskSearchForm" class="row g-0">
+                <div class="col-auto">
+                    <label class="col-form-label">请选择任务来源：</label>
+                </div>
+                <div class="col-auto">
+                    <select name="taskSource" id="taskSourceSelect" class="form-control form-select" aria-label="Server"
+                            style="width: 300px">
+                        <option selected disabled></option>
+                    </select>
+                </div>
+
+                <div style="margin-left: 30px" class="col-auto trello-kanban-select-class" hidden="hidden">
+                    <label class="col-form-label">请选择看板：</label>
+                </div>
+                <div class="col-auto trello-kanban-select-class" hidden="hidden">
+                    <select name="trelloBoard" id="trelloBoardSelect" class="form-control form-select" aria-label="Server"
+                            style="width: 250px">
+                        <option selected disabled></option>
+                    </select>
+                </div>
+            </form>
 
             <div style="margin-left: 50px" class="col-auto">
-                <button type="button" class="btn btn-primary">搜索</button>
+                <button id="taskSearchButton" type="button" class="btn btn-primary">搜索</button>
             </div>
         </div>
 
@@ -91,6 +96,56 @@
             </tr>
             </tbody>
         </table>
+
+        <script>
+            $(document).ready(function () {
+                $.ajax({
+                    url: "/task/taskSourceList",
+                    async: false,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        $.each(data, function (idx, item) {
+                            $("#taskSourceSelect").append("<option value=\"" + item.value + "\">" + item.name + "</option>");
+                        })
+                    }
+                });
+            })
+
+            $("#taskSourceSelect").change(function () {
+                var source = $(this).val();
+                console.log(source)
+                if (source === "TRELLO") {
+                    console.log(source)
+                    $(".trello-kanban-select-class").removeAttr("hidden")
+                    $.ajax({
+                        url: "/task/trelloBoards",
+                        async: false,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            $.each(data, function (idx, item) {
+                                $("#trelloBoardSelect").append("<option value=\"" + item.value + "\">" + item.name + "</option>");
+                            })
+                        }
+                    });
+                }
+            })
+
+            $("#taskSearchButton").click(function () {
+                var data = $("#taskSearchForm").serialize();
+                $.ajax({
+                    url: "/task/taskList",
+                    async: false,
+                    type: "GET",
+                    data:data,
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data)
+                    }
+                });
+            })
+        </script>
 
         <div style="width: 1600px;height:650px;overflow: scroll;margin-left: 30px;margin-top:50px" hidden>
             <table>
