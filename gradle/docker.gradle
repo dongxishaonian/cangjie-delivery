@@ -3,7 +3,7 @@ jib {
         image = "docker://eclipse-temurin:11-jre-focal"
     }
     to {
-        image = "cg837718548/cangjie-delivery:latest"
+        image = "techflower/cangjie-delivery:latest"
     }
     container {
         entrypoint = ["bash", "-c", "/entrypoint.sh"]
