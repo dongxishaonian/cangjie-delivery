@@ -49,7 +49,8 @@
                     <label class="col-form-label">请选择看板：</label>
                 </div>
                 <div class="col-auto trello-kanban-select-class" hidden="hidden">
-                    <select name="trelloBoard" id="trelloBoardSelect" class="form-control form-select" aria-label="Server"
+                    <select name="trelloBoard" id="trelloBoardSelect" class="form-control form-select"
+                            aria-label="Server"
                             style="width: 250px">
                         <option selected disabled></option>
                     </select>
@@ -74,26 +75,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>Otto</td>
-                <td>@fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td colspan="2">Larry the Bird</td>
-                <td>Otto</td>
-                <td>@twitter</td>
-            </tr>
+
             </tbody>
         </table>
 
@@ -138,10 +120,19 @@
                     url: "/task/taskList",
                     async: false,
                     type: "GET",
-                    data:data,
+                    data: data,
                     dataType: "json",
                     success: function (data) {
                         console.log(data)
+                        $.each(data, function (idx, item) {
+                            $("tbody").append("<tr>\n" +
+                                "                <th scope=\"row\">" + item.taskKey + "</th>\n" +
+                                "                <td>" + item.title + "</td>\n" +
+                                "                <td><span class=\"d-inline-block text-truncate\" style=\"max-width: 450px;\">" + item.desc + "</span></td>\n" +
+                                "                <td>" + "未关联流程" + "</td>\n" +
+                                "                <td>@" + "新建流程" + "</td>\n" +
+                                "            </tr>");
+                        })
                     }
                 });
             })

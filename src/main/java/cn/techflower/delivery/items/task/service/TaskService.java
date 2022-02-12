@@ -1,7 +1,9 @@
-package cn.techflower.delivery.items.task;
+package cn.techflower.delivery.items.task.service;
 
 import cn.techflower.delivery.items.task.client.TrelloClient;
+import cn.techflower.delivery.items.task.controller.vo.TaskListItemVo;
 import cn.techflower.delivery.items.task.controller.vo.TaskSearchVo;
+import cn.techflower.delivery.items.task.convert.TaskCardConverter;
 import cn.techflower.delivery.items.task.domian.dto.BoardDto;
 import cn.techflower.delivery.items.task.domian.dto.CardDto;
 import cn.techflower.delivery.items.task.enums.TaskSourceType;
@@ -17,6 +19,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static cn.techflower.foundation.error.BusinessErrorEnums.TASK_SOURCE_NOT_FOUND;
 
@@ -25,6 +28,7 @@ import static cn.techflower.foundation.error.BusinessErrorEnums.TASK_SOURCE_NOT_
 @Service
 public class TaskService {
     private final TrelloSettingService trelloSettingService;
+    private final TaskCardConverter taskCardConverter;
     private final TrelloClient trelloClient;
     private final TaskRepository taskRepository;
     private final DeliveryProcessRepository deliveryProcessRepository;
@@ -34,7 +38,7 @@ public class TaskService {
         return trelloClient.getBoardList();
     }
 
-    public List<CardDto> getTaskList(TaskSearchVo taskSearchVo) {
+    public List<TaskListItemVo> getTaskList(TaskSearchVo taskSearchVo) {
         if (Objects.isNull(taskSearchVo) || Objects.isNull(taskSearchVo.getTaskSource())) {
             throw new BusinessException(TASK_SOURCE_NOT_FOUND);
         }
@@ -44,11 +48,16 @@ public class TaskService {
         return new ArrayList<>();
     }
 
-    private List<CardDto> getTrelloCardDtos(TaskSearchVo taskSearchVo) {
+    private List<TaskListItemVo> getTrelloCardDtos(TaskSearchVo taskSearchVo) {
         if (StringUtils.isBlank(taskSearchVo.getTrelloBoard())) {
             throw new BusinessException(TASK_SOURCE_NOT_FOUND);
         }
-        return trelloClient.getCardList(taskSearchVo.getTrelloBoard());
+        List<CardDto> cardList = trelloClient.getCardList(taskSearchVo.getTrelloBoard());
+
+        List<TaskListItemVo> taskListItemVos = taskCardConverter.convertTaskListItemVoList(cardList);
+        return taskListItemVos.stream()
+            .peek(p -> p.setSourceType(TaskSourceType.TRELLO))
+            .collect(Collectors.toList());
     }
 
     public List<TaskSourceType> getUsefulTaskSources() {
