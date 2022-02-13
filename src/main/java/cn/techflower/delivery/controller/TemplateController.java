@@ -39,6 +39,13 @@ public class TemplateController {
         return "processTemplate";
     }
 
+    @GetMapping("/processTemplateAjax")
+    public ResponseEntity<List<DeliveryProcessTemplateEntity>> deliveryProcessTemplate() {
+        List<DeliveryProcessTemplateEntity> templateList = deliveryProcessTemplateService.getTemplateList();
+        return ResponseEntity.ok(templateList);
+    }
+
+
     @PostMapping("/template")
     public ResponseEntity<?> createProcessTemplate(@ModelAttribute @Valid CreateProcessTemplateVo templateVo) throws JsonProcessingException {
         System.out.println(new ObjectMapper().writeValueAsString(templateVo));

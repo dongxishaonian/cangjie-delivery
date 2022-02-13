@@ -1,6 +1,7 @@
 package cn.techflower.delivery.controller;
 
 
+import cn.techflower.delivery.controller.vo.CreateProcessVo;
 import cn.techflower.delivery.controller.vo.DeliveryProcessVo;
 import cn.techflower.delivery.domain.dto.ProcessDetailDto;
 import cn.techflower.delivery.domain.entity.DeliveryProcessEntity;
@@ -19,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -83,5 +86,11 @@ public class DeliveryController {
             .filter(f -> f.getProcessNode().contains(nodeType))
             .forEach(p -> content.append(String.format("<option value=\"%s\">%s</option>", p.name(), p.getDesc())));
         return ResponseEntity.ok(content.toString());
+    }
+
+    @PostMapping(value = "/deliveryProcess")
+    public ResponseEntity<?> createDeliveryProcess(@ModelAttribute CreateProcessVo createProcessVo) {
+        log.info("body:{}", createProcessVo);
+        return ResponseEntity.ok().build();
     }
 }

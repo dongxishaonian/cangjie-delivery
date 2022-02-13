@@ -55,6 +55,9 @@
                         <option selected disabled></option>
                     </select>
                 </div>
+                <div class="spinner-border  text-secondary col-auto" role="status" hidden>
+                    <span class="visually-hidden">Loading...</span>
+                </div>
             </form>
 
             <div style="margin-left: 50px" class="col-auto">
@@ -63,21 +66,58 @@
         </div>
 
         <hr style="margin-bottom: 20px">
+        <div class="table-responsive" >
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">key</th>
+                    <th scope="col">任务名称</th>
+                    <th scope="col">任务描述</th>
+                    <th scope="col">状态</th>
+                    <th scope="col">操作</th>
+                </tr>
+                </thead>
+                <tbody>
 
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">key</th>
-                <th scope="col">任务名称</th>
-                <th scope="col">任务描述</th>
-                <th scope="col">状态</th>
-                <th scope="col">操作</th>
-            </tr>
-            </thead>
-            <tbody>
+                </tbody>
+            </table>
+        </div>
 
-            </tbody>
-        </table>
+        <div class="modal fade" id="createDeliveryProcessModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">新建研发流程</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="create-process-form">
+                            <label for="taskSourceInput" hidden></label>
+                            <input type="text" class="form-control" id="taskSourceInput" name="taskSourceType" hidden>
+
+                            <div class="mb-3">
+                                <label for="taskKeyInput" class="col-form-label">任务Key:</label>
+                                <input type="text" class="form-control" id="taskKeyInput" name="taskKey" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskTitleInput" class="col-form-label">任务标题:</label>
+                                <input type="text" class="form-control" id="taskTitleInput" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="processTemplate" class="col-form-label">选择流程模板:</label>
+                                <select id="processTemplate" class="form-select" name="templateId" aria-label="Default select example">
+                                    <option selected disabled>Open this select menu</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                        <button id="confirm-create-process-button" type="button" class="btn btn-primary">创建</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script>
             $(document).ready(function () {
@@ -100,21 +140,24 @@
                 if (source === "TRELLO") {
                     console.log(source)
                     $(".trello-kanban-select-class").removeAttr("hidden")
+                    $(".spinner-border").removeAttr("hidden")
                     $.ajax({
                         url: "/task/trelloBoards",
-                        async: false,
+                        async: true,
                         type: "GET",
                         dataType: "json",
                         success: function (data) {
                             $.each(data, function (idx, item) {
                                 $("#trelloBoardSelect").append("<option value=\"" + item.value + "\">" + item.name + "</option>");
                             })
+                            $(".spinner-border").attr("hidden", "hidden")
                         }
                     });
                 }
             })
 
             $("#taskSearchButton").click(function () {
+                $("tbody").empty();
                 var data = $("#taskSearchForm").serialize();
                 $.ajax({
                     url: "/task/taskList",
@@ -126,13 +169,62 @@
                         console.log(data)
                         $.each(data, function (idx, item) {
                             $("tbody").append("<tr>\n" +
-                                "                <th scope=\"row\">" + item.taskKey + "</th>\n" +
-                                "                <td>" + item.title + "</td>\n" +
-                                "                <td><span class=\"d-inline-block text-truncate\" style=\"max-width: 450px;\">" + item.desc + "</span></td>\n" +
-                                "                <td>" + "未关联流程" + "</td>\n" +
-                                "                <td>@" + "新建流程" + "</td>\n" +
+                                "                <th id='taskKey' scope=\"row\">" + item.taskKey + "</th>\n" +
+                                "                <td id='title'>" + item.title + "</td>\n" +
+                                "                <td id='desc'><span class=\"d-inline-block text-truncate\" style=\"max-width: 450px;\">" + item.desc + "</span></td>\n" +
+                                "                <td id='processId'>" + "未关联流程" + "</td>\n" +
+                                "                <td><button data-bs-toggle=\"modal\" data-bs-target=\"#createDeliveryProcessModal\" type=\"button\" class=\"btn btn-primary btn-sm create-delivery-process-button\">" + "新建流程" + "</button></td>\n" +
                                 "            </tr>");
                         })
+                    }
+                });
+            })
+        </script>
+
+        <script>
+            $(document).ready( function () {
+                $.ajax({
+                    url: "/processTemplateAjax",
+                    async: true,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        $.each(data, function (idx, item) {
+                            $("#processTemplate").append("<option value=\"" + item.id + "\">" + item.name + "</option>");
+                        })
+                    }
+                });
+            })
+
+            $(document).on("click", ".create-delivery-process-button", function () {
+                var taskKeyElem = $(this).parent().siblings().filter("#taskKey").text();
+                var taskTitleElem = $(this).parent().siblings().filter("#title").text();
+                $("#taskKeyInput").val(taskKeyElem);
+                $("#taskTitleInput").val(taskTitleElem);
+                $("#taskSourceInput").val($("#taskSourceSelect").val());
+            })
+
+            $(document).on("click", "#confirm-create-process-button", function () {
+                if ($("#taskKeyInput").val()===null||$("#taskKeyInput").val()===''){
+                    alert("任务key不能为空！");
+                    return;
+                }
+                if ($("#taskSourceInput").val()===null||$("#taskSourceInput").val()===''){
+                    alert("任务来源不能为空！");
+                    return;
+                }
+                console.log($("#processTemplate").val())
+                if ($("#processTemplate").val()===null||$("#processTemplate").val()===''){
+                    alert("流程模板不能为空！");
+                    return;
+                }
+                var data = $("#create-process-form").serialize();
+                $.ajax({
+                    url: "/deliveryProcess",
+                    type: "POST",
+                    data: data,
+                    success: function (data) {
+                        console.log(data)
                     }
                 });
             })
