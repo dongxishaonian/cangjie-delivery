@@ -12,6 +12,7 @@ import cn.techflower.delivery.items.ci.domain.dto.CiDto;
 import cn.techflower.delivery.items.feature.domain.dto.FeatureDto;
 import cn.techflower.delivery.items.task.domian.dto.TaskDto;
 import cn.techflower.delivery.items.task.enums.TaskSourceType;
+import cn.techflower.delivery.service.DeliveryService;
 import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ import java.util.stream.Stream;
 @Slf4j
 @Data
 public class DeliveryController {
+    private final DeliveryService deliveryService;
 
     @GetMapping("/deliveryProcess")
     public String startLogin(Model model) {
@@ -91,6 +93,7 @@ public class DeliveryController {
     @PostMapping(value = "/deliveryProcess")
     public ResponseEntity<?> createDeliveryProcess(@ModelAttribute CreateProcessVo createProcessVo) {
         log.info("body:{}", createProcessVo);
+        deliveryService.createDeliveryProcess(createProcessVo);
         return ResponseEntity.ok().build();
     }
 }

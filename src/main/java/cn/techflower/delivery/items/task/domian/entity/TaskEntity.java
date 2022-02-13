@@ -28,8 +28,6 @@ public class TaskEntity {
     @Enumerated(value = EnumType.STRING)
     private TaskSourceType sourceType;
 
-    private String title;
-
     private String taskKey;
 
     private String taskUrl;

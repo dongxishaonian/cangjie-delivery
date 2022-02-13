@@ -9,5 +9,6 @@ import lombok.experimental.Accessors;
 public class CreateProcessVo {
     private Long templateId;
     private String taskKey;
+    private String taskUrl;
     private TaskSourceType taskSourceType;
 }

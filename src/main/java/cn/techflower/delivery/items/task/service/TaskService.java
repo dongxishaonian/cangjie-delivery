@@ -1,11 +1,14 @@
 package cn.techflower.delivery.items.task.service;
 
+import cn.techflower.delivery.domain.entity.DeliveryProcessEntity;
+import cn.techflower.delivery.enums.ProcessToolEnums;
 import cn.techflower.delivery.items.task.client.TrelloClient;
 import cn.techflower.delivery.items.task.controller.vo.TaskListItemVo;
 import cn.techflower.delivery.items.task.controller.vo.TaskSearchVo;
 import cn.techflower.delivery.items.task.convert.TaskCardConverter;
 import cn.techflower.delivery.items.task.domian.dto.BoardDto;
 import cn.techflower.delivery.items.task.domian.dto.CardDto;
+import cn.techflower.delivery.items.task.domian.entity.TaskEntity;
 import cn.techflower.delivery.items.task.enums.TaskSourceType;
 import cn.techflower.delivery.items.task.presistence.TaskRepository;
 import cn.techflower.delivery.presistence.DeliveryProcessRepository;
@@ -75,6 +78,23 @@ public class TaskService {
     private Boolean trelloSettingExist() {
         Optional<TrelloSettingEntity> trelloSettingEntityOptional = trelloSettingService.getTrelloSetting();
         return trelloSettingEntityOptional.isPresent();
+    }
+
+    public void createTaskProcessNode(ProcessToolEnums processToolEnums, String taskKey, String taskUrl, DeliveryProcessEntity deliveryProcess) {
+        Optional<TaskSourceType> taskSourceType = TaskSourceType.getTaskSourceType(processToolEnums);
+        if (taskSourceType.isEmpty()) {
+            log.error("taskSourceType not found! processToolEnums:{}", processToolEnums);
+            return;
+        }
+
+        if (processToolEnums.equals(ProcessToolEnums.TRELLO)) {
+            TaskEntity taskEntity = new TaskEntity();
+            taskEntity.setSourceType(taskSourceType.get());
+            taskEntity.setDeliveryProcess(deliveryProcess);
+            taskEntity.setTaskKey(taskKey);
+            taskEntity.setTaskUrl(taskUrl);
+            taskRepository.save(taskEntity);
+        }
     }
 
 }

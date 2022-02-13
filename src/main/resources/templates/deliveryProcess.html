@@ -95,10 +95,14 @@
                             <label for="taskSourceInput" hidden></label>
                             <input type="text" class="form-control" id="taskSourceInput" name="taskSourceType" hidden>
 
+                            <label for="taskUrlInput" hidden></label>
+                            <input type="text" class="form-control" id="taskUrlInput" name="taskUrl" hidden>
+
                             <div class="mb-3">
                                 <label for="taskKeyInput" class="col-form-label">任务Key:</label>
                                 <input type="text" class="form-control" id="taskKeyInput" name="taskKey" readonly>
                             </div>
+
                             <div class="mb-3">
                                 <label for="taskTitleInput" class="col-form-label">任务标题:</label>
                                 <input type="text" class="form-control" id="taskTitleInput" readonly>
@@ -171,9 +175,13 @@
                             $("tbody").append("<tr>\n" +
                                 "                <th id='taskKey' scope=\"row\">" + item.taskKey + "</th>\n" +
                                 "                <td id='title'>" + item.title + "</td>\n" +
+                                "                <td id='taskUrl' hidden>" + item.taskUrl + "</td>\n" +
                                 "                <td id='desc'><span class=\"d-inline-block text-truncate\" style=\"max-width: 450px;\">" + item.desc + "</span></td>\n" +
                                 "                <td id='processId'>" + "未关联流程" + "</td>\n" +
-                                "                <td><button data-bs-toggle=\"modal\" data-bs-target=\"#createDeliveryProcessModal\" type=\"button\" class=\"btn btn-primary btn-sm create-delivery-process-button\">" + "新建流程" + "</button></td>\n" +
+                                "                <td>" +
+                                "<button data-bs-toggle=\"modal\" data-bs-target=\"#createDeliveryProcessModal\" type=\"button\" class=\"btn btn-primary btn-sm create-delivery-process-button\">" + "新建流程" + "</button>" +
+                                "<button id='toTaskDetail' type=\"button\" class=\"btn btn-primary btn-sm\" onclick='javascript:window.open(\""+item.taskUrl+"\",\"_blank\")'>" + "查看任务详情" + "</button>" +
+                                "</td>\n" +
                                 "            </tr>");
                         })
                     }
@@ -199,7 +207,10 @@
             $(document).on("click", ".create-delivery-process-button", function () {
                 var taskKeyElem = $(this).parent().siblings().filter("#taskKey").text();
                 var taskTitleElem = $(this).parent().siblings().filter("#title").text();
+                var taskUrlElem = $(this).parent().siblings().filter("#taskUrl").text();
+
                 $("#taskKeyInput").val(taskKeyElem);
+                $("#taskUrlInput").val(taskUrlElem);
                 $("#taskTitleInput").val(taskTitleElem);
                 $("#taskSourceInput").val($("#taskSourceSelect").val());
             })
@@ -209,11 +220,14 @@
                     alert("任务key不能为空！");
                     return;
                 }
+                if ($("#taskUrlInput").val()===null||$("#taskUrlInput").val()===''){
+                    alert("任务Url不能为空！");
+                    return;
+                }
                 if ($("#taskSourceInput").val()===null||$("#taskSourceInput").val()===''){
                     alert("任务来源不能为空！");
                     return;
                 }
-                console.log($("#processTemplate").val())
                 if ($("#processTemplate").val()===null||$("#processTemplate").val()===''){
                     alert("流程模板不能为空！");
                     return;

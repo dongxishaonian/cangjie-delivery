@@ -10,8 +10,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static cn.techflower.foundation.error.BusinessErrorEnums.DELIVERY_PROCESS_TEMPLATE_ALREADY_EXIST;
+import static cn.techflower.foundation.error.BusinessErrorEnums.DELIVERY_PROCESS_TEMPLATE_NOT_FOUND;
 
 @Service
 @Slf4j
@@ -37,5 +39,10 @@ public class DeliveryProcessTemplateService {
         return deliveryProcessTemplateRepository.findAllByCreatedByOrderByCreatedDesc(authName);
     }
 
+
+    public DeliveryProcessTemplateEntity getDeliveryProcessTemplate(Long templateId) {
+        Optional<DeliveryProcessTemplateEntity> processTemplateEntityOptional = deliveryProcessTemplateRepository.findById(templateId);
+        return processTemplateEntityOptional.orElseThrow(() -> new BusinessException(DELIVERY_PROCESS_TEMPLATE_NOT_FOUND));
+    }
 
 }
