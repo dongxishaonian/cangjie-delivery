@@ -8,6 +8,7 @@ import cn.techflower.delivery.items.task.controller.vo.TaskSearchVo;
 import cn.techflower.delivery.items.task.convert.TaskCardConverter;
 import cn.techflower.delivery.items.task.domian.dto.BoardDto;
 import cn.techflower.delivery.items.task.domian.dto.CardDto;
+import cn.techflower.delivery.items.task.domian.dto.TaskDto;
 import cn.techflower.delivery.items.task.domian.entity.TaskEntity;
 import cn.techflower.delivery.items.task.enums.TaskSourceType;
 import cn.techflower.delivery.items.task.presistence.TaskRepository;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static cn.techflower.foundation.error.BusinessErrorEnums.TASK_NOT_FOUNT;
 import static cn.techflower.foundation.error.BusinessErrorEnums.TASK_SOURCE_NOT_FOUND;
 
 @Data
@@ -48,6 +50,7 @@ public class TaskService {
         if (taskSearchVo.getTaskSource().equals(TaskSourceType.TRELLO)) {
             return getTrelloCardDtos(taskSearchVo);
         }
+
         return new ArrayList<>();
     }
 
@@ -58,8 +61,13 @@ public class TaskService {
         List<CardDto> cardList = trelloClient.getCardList(taskSearchVo.getTrelloBoard());
 
         List<TaskListItemVo> taskListItemVos = taskCardConverter.convertTaskListItemVoList(cardList);
+
         return taskListItemVos.stream()
-            .peek(p -> p.setSourceType(TaskSourceType.TRELLO))
+            .peek(p -> {
+                Optional<TaskEntity> taskEntityOptional = taskRepository.findFirstByTaskKeyAndSourceType(p.getTaskKey(), taskSearchVo.getTaskSource());
+                taskEntityOptional.ifPresent(task -> p.setSourceType(task.getSourceType())
+                    .setDeliveryProcessId(task.getDeliveryProcess().getId()));
+            })
             .collect(Collectors.toList());
     }
 
@@ -95,6 +103,19 @@ public class TaskService {
             taskEntity.setTaskUrl(taskUrl);
             taskRepository.save(taskEntity);
         }
+    }
+
+    public TaskDto getTaskDto(ProcessToolEnums processToolEnums, DeliveryProcessEntity deliveryProcess) {
+        if (ProcessToolEnums.TRELLO.equals(processToolEnums)) {
+            Optional<TaskEntity> taskEntityOptional = taskRepository.findFirstByDeliveryProcess(deliveryProcess);
+            TaskEntity taskEntity = taskEntityOptional.orElseThrow(() -> new BusinessException(TASK_NOT_FOUNT));
+            CardDto cardDetail = trelloClient.getCardDetail(taskEntity.getTaskKey());
+            TaskDto taskDto = taskCardConverter.toTaskDto(cardDetail);
+            taskDto.setSourceType(TaskSourceType.getTaskSourceType(processToolEnums).orElse(TaskSourceType.TRELLO));
+            taskDto.setDeliveryProcessId(deliveryProcess.getId());
+            return taskDto;
+        }
+        return null;
     }
 
 }

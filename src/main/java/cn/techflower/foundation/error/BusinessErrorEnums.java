@@ -20,7 +20,8 @@ public enum BusinessErrorEnums {
     TRELLO_RESPONSE_DATA_ERROR("trello端响应数据异常！"),
 
     TASK_SOURCE_NOT_FOUND("未提供任务来源！"),
-    TRELLO_BOARD_NOT_FOUNT("未提供trello看板！");
+    TRELLO_BOARD_NOT_FOUNT("未提供trello看板！"),
+    TASK_NOT_FOUNT("开发任务不存在！");
 
     private final String errorMessage;
 

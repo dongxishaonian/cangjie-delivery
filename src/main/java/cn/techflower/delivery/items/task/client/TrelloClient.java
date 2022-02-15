@@ -56,6 +56,20 @@ public class TrelloClient {
         return response.getBody();
     }
 
+    public CardDto getCardDetail(String cardId) {
+        RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory);
+        String resourceUrl = String.format("https://api.trello.com/1/cards/%s", cardId);
+
+        HttpHeaders headers = buildTrelloAuthHeaser();
+        HttpEntity<?> request = new HttpEntity<>(headers);
+
+        ResponseEntity<CardDto> response = restTemplate.exchange(resourceUrl, HttpMethod.GET, request, new ParameterizedTypeReference<>() {
+        });
+
+        log.debug("{}", response);
+        return response.getBody();
+    }
+
     private HttpHeaders buildTrelloAuthHeaser() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", buildAuthHeader());

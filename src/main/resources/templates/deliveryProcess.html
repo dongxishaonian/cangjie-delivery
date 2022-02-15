@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en" style="height: 100%;">
+<html lang="en" style="height: 100%;">
 <link href="mine/css/welcome.css" rel="stylesheet"/>
 <link rel="icon" href="mine/icon/icons8.png"/>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -66,7 +66,7 @@
         </div>
 
         <hr style="margin-bottom: 20px">
-        <div class="table-responsive" >
+        <div class="table-responsive">
             <table class="table">
                 <thead>
                 <tr>
@@ -83,7 +83,8 @@
             </table>
         </div>
 
-        <div class="modal fade" id="createDeliveryProcessModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="createDeliveryProcessModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -109,7 +110,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="processTemplate" class="col-form-label">选择流程模板:</label>
-                                <select id="processTemplate" class="form-select" name="templateId" aria-label="Default select example">
+                                <select id="processTemplate" class="form-select" name="templateId"
+                                        aria-label="Default select example">
                                     <option selected disabled>Open this select menu</option>
                                 </select>
                             </div>
@@ -172,15 +174,21 @@
                     success: function (data) {
                         console.log(data)
                         $.each(data, function (idx, item) {
+                            var processDetailUrl;
+                            var buttonString = "未关联流程";
+                            if (item.deliveryProcessId != null) {
+                                processDetailUrl = "/deliveryProcessDetail?deliveryProcessId=" + item.deliveryProcessId
+                                buttonString = "<button class=\"btn btn-primary btn-sm\" onclick=\"javascript:window.open('"+processDetailUrl+"','_blank')\">查看流程详情</button>";
+                            }
                             $("tbody").append("<tr>\n" +
                                 "                <th id='taskKey' scope=\"row\">" + item.taskKey + "</th>\n" +
                                 "                <td id='title'>" + item.title + "</td>\n" +
                                 "                <td id='taskUrl' hidden>" + item.taskUrl + "</td>\n" +
                                 "                <td id='desc'><span class=\"d-inline-block text-truncate\" style=\"max-width: 450px;\">" + item.desc + "</span></td>\n" +
-                                "                <td id='processId'>" + "未关联流程" + "</td>\n" +
+                                "                <td id='processId'>" + buttonString+ "</td>\n" +
                                 "                <td>" +
                                 "<button data-bs-toggle=\"modal\" data-bs-target=\"#createDeliveryProcessModal\" type=\"button\" class=\"btn btn-primary btn-sm create-delivery-process-button\">" + "新建流程" + "</button>" +
-                                "<button id='toTaskDetail' type=\"button\" class=\"btn btn-primary btn-sm\" onclick='javascript:window.open(\""+item.taskUrl+"\",\"_blank\")'>" + "查看任务详情" + "</button>" +
+                                "<button id='toTaskDetail' type=\"button\" class=\"btn btn-primary btn-sm\" onclick='javascript:window.open(\"" + item.taskUrl + "\",\"_blank\")'>" + "查看任务详情" + "</button>" +
                                 "</td>\n" +
                                 "            </tr>");
                         })
@@ -190,7 +198,7 @@
         </script>
 
         <script>
-            $(document).ready( function () {
+            $(document).ready(function () {
                 $.ajax({
                     url: "/processTemplateAjax",
                     async: true,
@@ -216,19 +224,19 @@
             })
 
             $(document).on("click", "#confirm-create-process-button", function () {
-                if ($("#taskKeyInput").val()===null||$("#taskKeyInput").val()===''){
+                if ($("#taskKeyInput").val() === null || $("#taskKeyInput").val() === '') {
                     alert("任务key不能为空！");
                     return;
                 }
-                if ($("#taskUrlInput").val()===null||$("#taskUrlInput").val()===''){
+                if ($("#taskUrlInput").val() === null || $("#taskUrlInput").val() === '') {
                     alert("任务Url不能为空！");
                     return;
                 }
-                if ($("#taskSourceInput").val()===null||$("#taskSourceInput").val()===''){
+                if ($("#taskSourceInput").val() === null || $("#taskSourceInput").val() === '') {
                     alert("任务来源不能为空！");
                     return;
                 }
-                if ($("#processTemplate").val()===null||$("#processTemplate").val()===''){
+                if ($("#processTemplate").val() === null || $("#processTemplate").val() === '') {
                     alert("流程模板不能为空！");
                     return;
                 }

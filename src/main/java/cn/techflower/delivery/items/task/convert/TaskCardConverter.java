@@ -2,6 +2,7 @@ package cn.techflower.delivery.items.task.convert;
 
 import cn.techflower.delivery.items.task.controller.vo.TaskListItemVo;
 import cn.techflower.delivery.items.task.domian.dto.CardDto;
+import cn.techflower.delivery.items.task.domian.dto.TaskDto;
 import cn.techflower.foundation.configuration.MapstructIgnoreConfig;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,4 +17,10 @@ public interface TaskCardConverter {
     TaskListItemVo convertTaskListItemVo(CardDto cardDto);
 
     List<TaskListItemVo> convertTaskListItemVoList(List<CardDto> cardDtos);
+
+
+    @Mapping(target = "taskUrl", source = "shortUrl")
+    @Mapping(target = "taskKey", source = "id")
+    @Mapping(target = "title", source = "name")
+    TaskDto toTaskDto(CardDto cardDto);
 }
