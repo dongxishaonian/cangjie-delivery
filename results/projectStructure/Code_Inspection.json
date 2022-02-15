@@ -80,6 +80,10 @@
           "type": "Library"
         },
         {
+          "name": "Gradle: net.datafaker:datafaker:1.1.0",
+          "type": "Library"
+        },
+        {
           "name": "Gradle: com.google.guava:guava:18.0",
           "type": "Library"
         },
@@ -209,6 +213,10 @@
         },
         {
           "name": "Gradle: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.12.6",
+          "type": "Library"
+        },
+        {
+          "name": "Gradle: com.github.mifmif:generex:1.0.2",
           "type": "Library"
         },
         {
@@ -433,6 +441,10 @@
         },
         {
           "name": "Gradle: jakarta.activation:jakarta.activation-api:1.2.2",
+          "type": "Library"
+        },
+        {
+          "name": "Gradle: dk.brics.automaton:automaton:1.11-8",
           "type": "Library"
         },
         {
@@ -674,6 +686,10 @@
           "type": "Library"
         },
         {
+          "name": "Gradle: net.datafaker:datafaker:1.1.0",
+          "type": "Library"
+        },
+        {
           "name": "Gradle: com.google.guava:guava:18.0",
           "type": "Library"
         },
@@ -787,6 +803,10 @@
         },
         {
           "name": "Gradle: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.12.6",
+          "type": "Library"
+        },
+        {
+          "name": "Gradle: com.github.mifmif:generex:1.0.2",
           "type": "Library"
         },
         {
@@ -955,6 +975,10 @@
         },
         {
           "name": "Gradle: jakarta.activation:jakarta.activation-api:1.2.2",
+          "type": "Library"
+        },
+        {
+          "name": "Gradle: dk.brics.automaton:automaton:1.11-8",
           "type": "Library"
         },
         {

@@ -61,6 +61,12 @@
       ]
     },
     {
+      "name": "Gradle: net.datafaker:datafaker:1.1.0",
+      "roots": [
+        "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/net.datafaker/datafaker/1.1.0/8f7ea44588debf522fe25609fe3f1e658e167af6/datafaker-1.1.0.jar!/"
+      ]
+    },
+    {
       "name": "Gradle: com.google.guava:guava:18.0",
       "roots": [
         "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/com.google.guava/guava/18.0/cce0823396aa693798f8882e64213b1772032b09/guava-18.0.jar!/"
@@ -232,6 +238,12 @@
       "name": "Gradle: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.12.6",
       "roots": [
         "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-jaxb-annotations/2.12.6/a0bea2c6f98eb0dc24208b54a53da80ea459c156/jackson-module-jaxb-annotations-2.12.6.jar!/"
+      ]
+    },
+    {
+      "name": "Gradle: com.github.mifmif:generex:1.0.2",
+      "roots": [
+        "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/com.github.mifmif/generex/1.0.2/b378f873b4e8d7616c3d920e2132cb1c87679600/generex-1.0.2.jar!/"
       ]
     },
     {
@@ -484,6 +496,12 @@
       "name": "Gradle: jakarta.activation:jakarta.activation-api:1.2.2",
       "roots": [
         "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/jakarta.activation/jakarta.activation-api/1.2.2/99f53adba383cb1bf7c3862844488574b559621f/jakarta.activation-api-1.2.2.jar!/"
+      ]
+    },
+    {
+      "name": "Gradle: dk.brics.automaton:automaton:1.11-8",
+      "roots": [
+        "jar://$PROJECT_DIR$/../cache/gradle/caches/modules-2/files-2.1/dk.brics.automaton/automaton/1.11-8/6ebfa65eb431ff4b715a23be7a750cbc4cc96d0f/automaton-1.11-8.jar!/"
       ]
     },
     {
