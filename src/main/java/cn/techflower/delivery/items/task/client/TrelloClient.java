@@ -33,9 +33,9 @@ public class TrelloClient {
 
         HttpEntity<?> request = new HttpEntity<>(headers);
 
-
         ResponseEntity<List<BoardDto>> response = restTemplate.exchange(resourceUrl, HttpMethod.GET, request, new ParameterizedTypeReference<>() {
         });
+
 
         log.debug("{}", response);
 
