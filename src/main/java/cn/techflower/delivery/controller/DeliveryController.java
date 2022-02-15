@@ -35,7 +35,12 @@ public class DeliveryController {
     private final DeliveryService deliveryService;
 
     @GetMapping("/deliveryProcess")
-    public String startLogin(Model model) {
+    public String startLogin() {
+        return "deliveryProcess";
+    }
+
+    @GetMapping("/deliveryProcessDetail")
+    public String getDeliveryProcessDetail(Model model) {
         DeliveryProcessVo deliveryProcessVo = new DeliveryProcessVo();
 
         deliveryProcessVo.setTemplate(new DeliveryProcessTemplateEntity()
@@ -71,7 +76,8 @@ public class DeliveryController {
         );
 
         model.addAttribute("DeliveryProcessDetail", deliveryProcessVo);
-        return "deliveryProcess";
+
+        return "deliveryProcessDetail";
     }
 
     @GetMapping(value = "/deliveryProcessTypeList", produces = MediaType.TEXT_PLAIN_VALUE)
