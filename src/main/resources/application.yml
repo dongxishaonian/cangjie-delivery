@@ -1,6 +1,6 @@
 spring:
   profiles:
-    default: dev
+    default: single
 
 server:
   port: 8088

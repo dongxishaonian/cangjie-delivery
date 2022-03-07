@@ -10,12 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -25,6 +23,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AuthorizationController {
     private final PermissionService permissionService;
+
+    @GetMapping("/user")
+    @ResponseBody
+    public Principal user(Principal principal) {
+        return principal;
+    }
 
     @GetMapping("/login")
     public String startLogin(@RequestParam(required = false) Boolean error, Model model) {

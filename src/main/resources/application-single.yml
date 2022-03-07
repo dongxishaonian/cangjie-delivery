@@ -1,11 +1,22 @@
 spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          aliyunidaas:
+            issuer-uri: https://eiam-api-cn-hangzhou.aliyuncs.com/v2/idaas_ge2o7ukabeiegr6mfmj2244jcq/app_misz37ktziyqcvnnlnkkwmn65y/oidc
+        registration:
+          aliyunidaas:
+            client-id:
+            client-secret:
+
   data:
     jpa:
       repositories:
         enabled: true
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     properties:
       hibernate:
         globally_quoted_identifiers: true

@@ -49,12 +49,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .rememberMe()
             .tokenValiditySeconds(120)
 
+            .and().httpBasic()
+
+            .and().oauth2Login().loginPage("/login").defaultSuccessUrl("/deliveryProcess", true)
+
             .and()
             .authorizeRequests()
-            .antMatchers("/register", "/login", "/perform_register").permitAll()
+            .antMatchers("/register", "/login", "/perform_register","/login/oauth2/code/aliyunidaas").permitAll()
             // 所有请求都需要认证
             .anyRequest().authenticated()
-            .and().httpBasic();
+        ;
 
     }
 
